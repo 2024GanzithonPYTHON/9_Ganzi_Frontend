@@ -262,3 +262,49 @@ export const DashedLine = styled.div`
   background-image: url('/images/DashLine.svg');
   background-size: cover;
 `;
+
+// 다음 버튼 컨테이너
+export const NextBtn = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  left: 50%;
+  top: 95%;
+  width: 334px;
+  height: 57px;
+`;
+
+// 해당사항 없음 버튼
+export const SecondaryButton = styled.button`
+  width: 165px;
+  height: 57px;
+  background: #ffffff;
+  border: 1px solid #8f34ff;
+  border-radius: 15px;
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-size: 16px;
+  color: #8f34ff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+// 다음 버튼
+export const PrimaryButton = styled.button`
+  width: 165px;
+  height: 57px;
+  background: #8f34ff;
+  border: none;
+  border-radius: 15px;
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

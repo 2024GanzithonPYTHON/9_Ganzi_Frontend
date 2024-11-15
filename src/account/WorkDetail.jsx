@@ -126,6 +126,12 @@ export function WorkDetail() {
           />
         </WD.TimeInputContainer>
       </WD.TimeContainer>
+
+      {/* 하단 버튼들 */}
+      <WD.NextBtn>
+        <WD.SecondaryButton>해당사항 없음</WD.SecondaryButton>
+        <WD.PrimaryButton>다음</WD.PrimaryButton>
+      </WD.NextBtn>
     </WD.Container>
   );
 }
