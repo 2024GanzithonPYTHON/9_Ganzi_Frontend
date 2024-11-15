@@ -183,7 +183,7 @@ export const MinusBtn = styled.button`
   }
 `;
 
-// 완료 버튼
+// 다음 버튼
 export const NextBtn = styled.button`
   position: absolute;
   transform: translate(-50%, -50%);

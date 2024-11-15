@@ -138,7 +138,7 @@ export const AgeButton = styled.button`
   font-family: "Pretendard Variable";
 
   &:hover {
-    background-color: #8f34ff; /* 호버 시 배경 색상 */
-    color: #fff;
+    background-color: ${({ isSelected }) =>
+      isSelected ? "#7b2fd6" : "#e5e5e5"};
   }
 `;
