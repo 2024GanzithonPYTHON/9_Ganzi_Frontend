@@ -93,7 +93,7 @@ export const ScheduleButton = styled.div`
   }
 `;
 
-// 출퇴근 요일 선택 컨테이너
+// 출근 요일 선택 컨테이너
 export const LabelContainer = styled.div`
   display: flex;
   align-items: center;
@@ -177,4 +177,88 @@ export const SelectAllText = styled.div`
   color: #9ea2b0;
   font-family: 'Pretendard';
   font-size: 15px;
+`;
+
+// 출퇴근 시간 컨테이너
+export const TimeContainer = styled.div`
+  position: absolute;
+  top: 530px;
+  left: 50%;
+  transform: translateX(-50%); // 전체 컨테이너를 가운데 정렬
+`;
+
+// 출퇴근 시간 라벨 컨테이너
+export const TimeLabelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+`;
+
+// 시간 아이콘
+export const TimeIcon = styled.div`
+  width: 20px;
+  height: 20px;
+  background-image: url('/images/ScheduleTime.svg');
+  background-size: cover;
+`;
+
+// 시간 라벨
+export const TimeLabel = styled.div`
+  color: #8f34ff;
+  font-family: 'Pretendard';
+  font-size: 15px;
+  font-weight: 500;
+`;
+
+// 설명 텍스트
+export const TimeSubText = styled.div`
+  font-size: 12px;
+  color: #9ea2b0;
+`;
+
+// 시간 입력 컨테이너
+export const TimeInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 21px;
+`;
+
+// 시간 텍스트 라벨 (출근/퇴근 시간)
+export const TimeTextLabel = styled.div`
+  color: ${({ hasValue }) =>
+    hasValue ? '#8f34ff' : '#9ea2b0'}; // 값이 있을 때 보라색
+  font-family: 'Pretendard';
+  font-size: 15px;
+  text-align: center;
+`;
+
+// 시간 입력 필드
+export const TimeInput = styled.input`
+  width: 43px;
+  height: 31px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: ${({ hasValue }) =>
+    hasValue ? '#8f34ff' : '#000'}; // 값이 있을 때 보라색
+  border: none;
+  background-color: transparent;
+  outline: none;
+
+  &::placeholder {
+    // 입력 전 색상
+    color: #9ea2b0;
+  }
+`;
+
+// 출근 시간과 퇴근 시간 사이 구분선
+export const DashedLine = styled.div`
+  width: 332px;
+  height: 1px;
+  left: 28px;
+  background-image: url('/images/DashLine.svg');
+  background-size: cover;
 `;

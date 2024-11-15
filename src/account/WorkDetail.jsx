@@ -2,18 +2,12 @@ import Reac, { useState, useEffect } from 'react';
 import * as WD from './styledWorkDetail';
 
 export function WorkDetail() {
-  const [isScheduleFixed, setIsScheduleFixed] = useState(null);
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [allDaysSelected, setAllDaysSelected] = useState(false);
-  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [isScheduleFixed, setIsScheduleFixed] = useState(null); // 출퇴근 일정함 / 일정하지 않음
+  const [selectedDays, setSelectedDays] = useState([]); // 요일 선택
+  const [allDaysSelected, setAllDaysSelected] = useState(false); // 매일 선택
 
-  // 스낵바
-  useEffect(() => {
-    if (showSnackbar) {
-      const timer = setTimeout(() => setShowSnackbar(false), 4000); // 4초동안 스낵바 나타남
-      return () => clearTimeout(timer);
-    }
-  }, [showSnackbar]);
+  const [startWork, setStartWork] = useState(''); // 출근 시간
+  const [endWork, setEndWork] = useState(''); // 퇴근 시간
 
   // 출퇴근 일정 선택
   const toggleSchedule = (isFixed) => setIsScheduleFixed(isFixed);
@@ -31,6 +25,17 @@ export function WorkDetail() {
     setSelectedDays(
       allDaysSelected ? [] : ['월', '화', '수', '목', '금', '토', '일']
     );
+  };
+
+  const handleTimeChange = (e, setTime) => {
+    const input = e.target.value;
+    if (/^[0-9:]*$/.test(input) && input.length <= 5) {
+      if (input.length === 2 && !input.includes(':')) {
+        setTime(input + ':'); // 2자리 입력 시 자동으로 ":" 추가
+      } else {
+        setTime(input);
+      }
+    }
   };
 
   return (
@@ -85,6 +90,42 @@ export function WorkDetail() {
         <WD.SelectAllIcon isSelected={allDaysSelected} />
         <WD.SelectAllText>매일 선택</WD.SelectAllText>
       </WD.SelectAllContainer>
+
+      {/* 출퇴근 시간 입력 */}
+      <WD.TimeContainer>
+        <WD.TimeLabelContainer>
+          <WD.TimeIcon />
+          <WD.TimeLabel>출퇴근 시간</WD.TimeLabel>
+          <WD.TimeSubText>24시간 기준으로 기재</WD.TimeSubText>
+        </WD.TimeLabelContainer>
+
+        <WD.TimeInputContainer>
+          <WD.TimeTextLabel hasValue={startWork.length > 0}>
+            출근 시간
+          </WD.TimeTextLabel>
+          {/* 값이 있는지 여부를 스타일에 전달 (있을 시 색상 변경) */}
+          <WD.TimeInput
+            type="text"
+            value={startWork}
+            onChange={(e) => handleTimeChange(e, setStartWork)}
+            hasValue={startWork.length > 0} // 값이 있는지 여부를 스타일에 전달 (있을 시 색상 변경)
+            placeholder="00:00"
+          />
+        </WD.TimeInputContainer>
+        <WD.DashedLine />
+        <WD.TimeInputContainer>
+          <WD.TimeTextLabel hasValue={endWork.length > 0}>
+            퇴근 시간
+          </WD.TimeTextLabel>
+          <WD.TimeInput
+            type="text"
+            value={endWork}
+            onChange={(e) => handleTimeChange(e, setEndWork)}
+            placeholder="00:00"
+            hasValue={endWork.length > 0} // 값이 있는지 여부를 스타일에 전달 (있을 시 색상 변경)
+          />
+        </WD.TimeInputContainer>
+      </WD.TimeContainer>
     </WD.Container>
   );
 }
