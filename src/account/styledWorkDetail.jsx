@@ -86,6 +86,7 @@ export const ScheduleButton = styled.div`
   font-family: 'Pretendard';
   font-size: 15px;
   font-weight: 500;
+  letter-spacing: -0.03em;
   cursor: pointer;
 
   &:hover {
@@ -109,6 +110,7 @@ export const Label = styled.div`
   font-family: 'Pretendard';
   font-size: 15px;
   font-weight: 500;
+  letter-spacing: -0.03em;
 `;
 
 // 출근 일자 아이콘
@@ -177,6 +179,7 @@ export const SelectAllText = styled.div`
   color: #9ea2b0;
   font-family: 'Pretendard';
   font-size: 15px;
+  letter-spacing: -0.03em;
 `;
 
 // 출퇴근 시간 컨테이너
@@ -209,12 +212,14 @@ export const TimeLabel = styled.div`
   font-family: 'Pretendard';
   font-size: 15px;
   font-weight: 500;
+  letter-spacing: -0.03em;
 `;
 
 // 설명 텍스트
 export const TimeSubText = styled.div`
   font-size: 12px;
   color: #9ea2b0;
+  letter-spacing: -0.03em;
 `;
 
 // 시간 입력 컨테이너
@@ -233,6 +238,7 @@ export const TimeTextLabel = styled.div`
   font-family: 'Pretendard';
   font-size: 15px;
   text-align: center;
+  letter-spacing: -0.03em;
 `;
 
 // 시간 입력 필드
@@ -290,6 +296,7 @@ export const SecondaryButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: -0.03em;
 `;
 
 // 다음 버튼
@@ -307,4 +314,5 @@ export const PrimaryButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: -0.03em;
 `;
