@@ -7,6 +7,7 @@ import Welcome from "./account/Welcome";
 import Housework2 from "./account/Housework2";
 import Housework3 from "./account/Housework3";
 import { Ready } from "./account/Ready";
+import AddMember from "./account/AddMember";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/housework2" element={<Housework2 />} />{" "}
         <Route path="/housework3" element={<Housework3 />} />{" "}
         <Route path="/ready" element={<Ready />} />
+        <Route path="/addmember" element={<AddMember />} />
       </Routes>
     </BrowserRouter>
   );

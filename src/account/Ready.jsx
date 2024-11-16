@@ -5,8 +5,8 @@ import * as W from "./styledReady";
 export function Ready() {
   const navigate = useNavigate();
 
-  const goGender = () => {
-    navigate(`/gender`);
+  const goMain = () => {
+    navigate(`/main`);
   };
 
   return (
@@ -17,7 +17,7 @@ export function Ready() {
           이제 집콕콕이 사용자님 맞춤형으로 집안일을 콕콕 찝어드릴게요!
         </W.InfoText2>
         <W.WelcomeLogo />
-        <W.CompleteBtn onClick={goGender} />
+        <W.CompleteBtn onClick={goMain} />
       </W.Container>
     </>
   );

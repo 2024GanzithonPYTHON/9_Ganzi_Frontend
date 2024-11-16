@@ -107,12 +107,13 @@ export const TaskLabel = styled.div`
   margin-top: 8px;
   z-index: 3; /* 이미지와 오버레이 위에 표시 */
   font-family: "Pretendard Variable";
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 600;
   line-height: 17px; /* 170% */
   letter-spacing: -0.3px;
   transition: color 0.3s ease-in-out; /* 부드러운 색상 전환 */
+  width: 100px;
 `;
 
 // 건너뛰기 텍스트

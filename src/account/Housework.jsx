@@ -47,7 +47,7 @@ export function Housework() {
           >
             {time === "사용자 설정" && selectedTime === "사용자 설정" ? (
               <H.CustomTimeInput
-                type="text"
+                type="number"
                 value={customTime}
                 placeholder="예: 3시간"
                 onChange={handleCustomTimeChange}
