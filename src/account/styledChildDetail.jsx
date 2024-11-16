@@ -5,7 +5,7 @@ export const Container = styled.div`
   position: relative;
   margin: 0 auto;
   width: 393px;
-  height: 852px;
+  height: 1204px;
   margin-top: 0px;
   background: #fafafa;
   border: 1px solid black;
@@ -38,7 +38,7 @@ export const Nickname = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: 17px; /* 113.333% */
-  letter-spacing: -0.45px;
+  letter-spacing: -0.03em;
 `;
 
 // 안내 문구
@@ -102,7 +102,7 @@ export const PetIcon = styled.div`
 // 별명 입력란 컨테이너
 export const InputContainer = styled.div`
   position: absolute;
-  top: 380px;
+  top: ${({ top }) => top || '0px'}; // props로 top값 동적으로 설정
   left: 33px;
   width: 327px;
   height: 35px;
@@ -157,7 +157,7 @@ export const ChoiceContainer = styled.div`
   display: flex;
   flex-wrap: wrap; // 줄 바꿈
   position: absolute;
-  top: 479px;
+  top: ${({ top }) => top || '0px'}; // props로 top값 동적으로 설정
   left: 29px;
   right: 29px;
   gap: 12px;
@@ -258,7 +258,7 @@ export const SelectAllText = styled.div`
 // 등하원 시간 입력 컨테이너
 export const TimeContainer = styled.div`
   position: absolute;
-  top: 530px;
+  top: 722px;
   left: 50%;
   transform: translateX(-50%); // 전체 컨테이너를 가운데 정렬
 `;
