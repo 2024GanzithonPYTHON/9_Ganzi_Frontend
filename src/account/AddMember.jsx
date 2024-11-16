@@ -5,8 +5,12 @@ import * as A from "./styledAddMember";
 export function AddMember() {
   const navigate = useNavigate();
 
-  const goGender = () => {
-    navigate(`/gender`);
+  const goInvite = () => {
+    navigate(`/invite`);
+  };
+
+  const goJoin = () => {
+    navigate(`/join`);
   };
 
   const goBack = () => {
@@ -25,8 +29,8 @@ export function AddMember() {
           <br />
           초대코드를 받아 참여해보세요.
         </A.InfoText>
-        <A.InviteBtn onClick={goGender} />
-        <A.JoinBtn />
+        <A.InviteBtn onClick={goInvite} />
+        <A.JoinBtn onClick={goJoin} />
       </A.Container>
     </>
   );

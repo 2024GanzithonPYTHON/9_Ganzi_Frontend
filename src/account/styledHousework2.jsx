@@ -140,7 +140,7 @@ export const SkipText = styled.div`
 
 // 다음 버튼
 export const NextBtn = styled.button`
-  position: fixed;
+  position: absolute;
   transform: translate(-50%, -50%); /* 중앙 정렬 */
   left: 50%;
   top: 95%;

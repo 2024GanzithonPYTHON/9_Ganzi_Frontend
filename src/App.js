@@ -8,6 +8,9 @@ import Housework2 from "./account/Housework2";
 import Housework3 from "./account/Housework3";
 import { Ready } from "./account/Ready";
 import AddMember from "./account/AddMember";
+import Join from "./account/Join";
+import Invite from "./account/Invite";
+import Contribution from "./account/Contribution";
 
 function App() {
   return (
@@ -21,7 +24,10 @@ function App() {
         <Route path="/housework2" element={<Housework2 />} />{" "}
         <Route path="/housework3" element={<Housework3 />} />{" "}
         <Route path="/ready" element={<Ready />} />
-        <Route path="/addmember" element={<AddMember />} />
+        <Route path="/addmember" element={<AddMember />} />{" "}
+        <Route path="/join" element={<Join />} />
+        <Route path="/invite" element={<Invite />} />{" "}
+        <Route path="/contribution" element={<Contribution />} />
       </Routes>
     </BrowserRouter>
   );
