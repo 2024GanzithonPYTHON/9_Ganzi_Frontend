@@ -18,7 +18,6 @@ export function WorkDetail() {
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
   };
-
   // 모든 요일 선택
   const selectAllDays = () => {
     setAllDaysSelected(!allDaysSelected);
@@ -27,6 +26,7 @@ export function WorkDetail() {
     );
   };
 
+  // 시간 입력
   const handleTimeChange = (e, setTime) => {
     const input = e.target.value;
     if (/^[0-9:]*$/.test(input) && input.length <= 5) {
@@ -67,7 +67,7 @@ export function WorkDetail() {
         </WD.ScheduleButton>
       </WD.ButtonContainer>
 
-      {/* 출근 요일 선택 */}
+      {/* 출근 일자 선택 */}
       <WD.LabelContainer>
         {/* 아이콘 */}
         <WD.ScheduleIcon />

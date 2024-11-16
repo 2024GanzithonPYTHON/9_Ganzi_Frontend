@@ -3,6 +3,29 @@ import * as CD from './styledChildDetail';
 
 export function ChildDetail() {
   const [nickname, setNickname] = useState('');
+  const [Institution, setInstitution] = useState('');
+
+  const [selectedDays, setSelectedDays] = useState([]); // 요일 선택
+  const [allDaysSelected, setAllDaysSelected] = useState(false); // 매일 선택
+
+  // 등하원 기관 선택
+  const handleInstitution = (institution) => {
+    setInstitution(institution); // 선택된 기관 상태 업데이트
+  };
+
+  // 요일 선택
+  const toggleDaySelection = (day) => {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  };
+  // 모든 요일 선택
+  const selectAllDays = () => {
+    setAllDaysSelected(!allDaysSelected);
+    setSelectedDays(
+      allDaysSelected ? [] : ['월', '화', '수', '목', '금', '토', '일']
+    );
+  };
 
   return (
     <CD.Container>
@@ -17,12 +40,11 @@ export function ChildDetail() {
       </CD.InfoText>
 
       {/* 아이 별명 입력 */}
-      <CD.LabelContainer>
+      <CD.LabelContainer top="350px">
         {/* 아이콘 */}
         <CD.ChildIcon />
         <CD.Label>아이의 별명으로 사용할 이름을 입력하세요.</CD.Label>
       </CD.LabelContainer>
-
       {/* 별명 입력란 */}
       <CD.InputContainer>
         <CD.Input
@@ -32,9 +54,50 @@ export function ChildDetail() {
           placeholder="별명을 입력하세요"
         />
       </CD.InputContainer>
+
       {/* 등하원 기관 선택 */}
+      <CD.LabelContainer top="436px">
+        {/* 아이콘 */}
+        <CD.InstitutionIcon />
+        <CD.Label>등하원/교 기관</CD.Label>
+      </CD.LabelContainer>
+      <CD.ChoiceContainer>
+        {['어린이집', '유치원', '초등학교', '중학교', '그 외'].map(
+          (institution) => (
+            <CD.ChoiceButton
+              key={institution}
+              selected={Institution === institution}
+              onClick={() => handleInstitution(institution)}
+            >
+              {institution}
+            </CD.ChoiceButton>
+          )
+        )}
+      </CD.ChoiceContainer>
 
       {/* 등하원 일자 선택 */}
+      <CD.LabelContainer top="579px">
+        {/* 아이콘 */}
+        <CD.ScheduleIcon />
+        <CD.Label>출근 일자</CD.Label>
+      </CD.LabelContainer>
+      <CD.DayContainer>
+        {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
+          <CD.Day
+            key={day}
+            selected={selectedDays.includes(day)}
+            onClick={() => toggleDaySelection(day)}
+          >
+            {day}
+          </CD.Day>
+        ))}
+      </CD.DayContainer>
+
+      {/* 매일 선택 */}
+      <CD.SelectAllContainer onClick={selectAllDays}>
+        <CD.SelectAllIcon isSelected={allDaysSelected} />
+        <CD.SelectAllText>매일 선택</CD.SelectAllText>
+      </CD.SelectAllContainer>
 
       {/* 등하원 시간 입력 */}
 

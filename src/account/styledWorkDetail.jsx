@@ -14,6 +14,7 @@ export const Container = styled.div`
   box-sizing: border-box; /* 패딩이 width에 포함되도록 설정 */
 `;
 
+// ~기본 프로필~
 // 프로필 이미지
 export const ProfileImg = styled.div`
   position: absolute;
@@ -62,6 +63,7 @@ export const HighlightText = styled.span`
   color: #8f34ff;
 `;
 
+// ~출퇴근 일정/일정하지 않음 선택~
 //버튼 컨테이너
 export const ButtonContainer = styled.div`
   display: flex;
@@ -73,7 +75,7 @@ export const ButtonContainer = styled.div`
   gap: 15px; /* 버튼 간격 */
 `;
 
-// 출퇴근 일정 선택 버튼
+// 출퇴근 일정 여부 선택 버튼
 export const ScheduleButton = styled.div`
   width: 157px;
   height: 38px;
@@ -94,7 +96,8 @@ export const ScheduleButton = styled.div`
   }
 `;
 
-// 출근 요일 선택 컨테이너
+// ~출근 일자 선택~
+// 출근 일자 선택 컨테이너
 export const LabelContainer = styled.div`
   display: flex;
   align-items: center;
@@ -104,7 +107,7 @@ export const LabelContainer = styled.div`
   left: 29px;
 `;
 
-// 라벨
+// 출근 일자 라벨
 export const Label = styled.div`
   color: #8f34ff;
   font-family: 'Pretendard';
@@ -121,7 +124,7 @@ export const ScheduleIcon = styled.div`
   background-size: cover; //이미지 안잘리게
 `;
 
-// 요일 선택 컨테이너
+// 일자 버튼 컨테이너
 export const DayContainer = styled.div`
   display: flex;
   justify-content: space-around;
@@ -131,7 +134,7 @@ export const DayContainer = styled.div`
   right: 29px;
 `;
 
-// 요일 버튼
+// 일자 버튼
 export const Day = styled.div`
   width: 38px;
   height: 38px;
@@ -182,6 +185,7 @@ export const SelectAllText = styled.div`
   letter-spacing: -0.03em;
 `;
 
+// ~출퇴근 시간 입력~
 // 출퇴근 시간 컨테이너
 export const TimeContainer = styled.div`
   position: absolute;
@@ -215,7 +219,7 @@ export const TimeLabel = styled.div`
   letter-spacing: -0.03em;
 `;
 
-// 설명 텍스트
+// 부연 설명 텍스트
 export const TimeSubText = styled.div`
   font-size: 12px;
   color: #9ea2b0;
@@ -269,6 +273,7 @@ export const DashedLine = styled.div`
   background-size: cover;
 `;
 
+// ~다음 버튼~
 // 다음 버튼 컨테이너
 export const NextBtn = styled.div`
   position: absolute;
