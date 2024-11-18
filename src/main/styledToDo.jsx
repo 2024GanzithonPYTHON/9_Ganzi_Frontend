@@ -1,18 +1,12 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
-//페이지 배경
+// 페이지 배경
 export const Container = styled.div`
   position: relative;
   margin: 0 auto;
   width: 393px;
   height: 852px;
-
   background-color: #fafafa;
-  background-image: url('/images/BackgroundLogo.svg');
-  background-position: 126px 423px; // 이미지 위치 (가로, 세로)
-  background-size: 181px 175.33px; // 이미지 크기 (너비, 높이)
-  background-repeat: no-repeat;
-
   border: 1px solid black;
   min-height: 100vh; // 화면 높이에 맞추어 크기 조절
   padding: 20px 35px;
@@ -66,10 +60,8 @@ export const ToggleButton = styled.div`
   font-size: 14px;
   font-weight: bold;
   border-radius: 40px;
-  background: ${({ isActive }) =>
-    isActive ? '#fbfdfe' : 'transparent'}; // 활성화 여부에 따른 배경색
-  color: ${({ isActive }) =>
-    isActive ? '#8e07fc' : '#9ea2b0'}; // 활성화 여부에 따른 글자색
+  background: ${({ isActive }) => (isActive ? '#fbfdfe' : 'transparent')};
+  color: ${({ isActive }) => (isActive ? '#8e07fc' : '#9ea2b0')};
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -82,50 +74,109 @@ export const Icon = styled.img`
   margin-right: 5px;
 `;
 
-// 초대 메시지1
-export const InviteMessage1 = styled.div`
-  margin: 42px;
-  text-align: center;
-  color: #312f34;
-  font-family: 'Pretendard Variable';
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 17px; /* 85% */
-  letter-spacing: -0.6px;
+// '집안을 콕콕 정리했어요' 텍스트
+export const TextOur = styled.div`
+  width: 178px;
+  height: 17px;
+  left: calc(50% - 178px / 2 - 74.5px);
+  background-image: url('/images/TextOurToDo.svg');
+  background-size: cover;
+  margin-top: 21px;
 `;
 
-// 초대 메시지2
-export const InviteMessage2 = styled.div`
-  margin: 21px;
-  text-align: center;
-  color: #312f34;
-  font-family: Pretendard;
+// '오늘의 집안일' 텍스트
+export const TextMy = styled.div`
+  width: 95px;
+  height: 17px;
+  left: calc(50% - 178px / 2 - 74.5px);
+  background-image: url('/images/TextMyToDo.svg');
+  background-size: cover;
+  margin-top: 21px;
+`;
+
+// ~할일~
+// 할일 컨테이너
+export const ToDoSection = styled.div`
+  margin: 21px 0;
+`;
+
+// 오전/오후 레이블
+export const TimeLabel = styled.h2`
+  display: flex;
+  align-items: center;
+  width: 327px;
+  height: 23px;
+  color: #fff;
+  font-family: 'Pretendard - Variable';
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
-  line-height: 17px; /* 113.333% */
+  line-height: 17px; // 113.333%
   letter-spacing: -0.45px;
+  border-radius: 6px;
+  background: #8f34ff;
+  margin-bottom: 10px; // 하단 여백
+  text-indent: 12px; // 텍스트를 안쪽으로 들여쓰기
 `;
 
-// 초대 버튼
-export const InviteButton = styled.button`
+// 개별 할일 박스
+export const ToDoBox = styled.div`
+  display: flex;
+  align-items: center;
   width: 327px;
-  height: 51px;
-  border-radius: 13px;
-  border: none;
-  background: #8e07fc;
+  height: 63px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0px 2px 13.4px 1px rgba(0, 0, 0, 0.18); // 그림자 효과
+  margin-bottom: 12px;
+`;
 
-  margin: 21px auto;
-  padding: 10px 20px;
-  color: #fff;
-  font-family: 'Pretendard Variable';
-  font-size: 15px;
+// 개별 할일 박스 안 아이콘
+export const ToDoIcon = styled.img`
+  width: 28px;
+  height: 28px;
+  margin: auto 12px;
+`;
+
+// 개별 할일 박스 안 텍스트 컨테이너
+export const ToDoTexts = styled.div`
+  display: flex;
+  flex-direction: column; /* 세로 정렬로 변경 */
+  justify-content: center;
+`;
+
+// 같이해요/00씨의 할일
+export const Ment = styled.div`
+  font-family: 'Pretendard-Variable';
+
+  color: #9ea2b0;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 17px; /* 130.769% */
+  letter-spacing: -0.39px;
+`;
+
+// 개별 할일 이름
+export const TaskName = styled.div`
+  font-family: 'Pretendard-Variable';
+  font-size: 15px;
+  color: var(--kakao-logo, #000);
+  font-style: normal;
+  font-weight: 700;
   line-height: 17px; /* 113.333% */
   letter-spacing: -0.45px;
+  margin-top: 4px;
+`;
+
+// 체크박스
+export const CheckBox = styled.img`
+  width: 22px;
+  height: 22px;
   cursor: pointer;
+  position: relative;
+  margin-left: auto;
+  margin-right: 21px;
 `;
 
 // ~푸터~

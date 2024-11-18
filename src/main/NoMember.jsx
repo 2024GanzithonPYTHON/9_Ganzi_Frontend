@@ -3,7 +3,7 @@ import * as N from './styledNoMember';
 
 export function NoMember() {
   const [currentDate, setCurrentDate] = useState(''); // 현재 날짜
-  const [isOurTodo, setIsOurTodo] = useState(true); // "우리의 할일" 활성화 상태
+  const [isOurTodo, setIsOurTodo] = useState(true); // 현재 탭 상태 (우리/나)
 
   // 오늘 날짜 가져오기
   useEffect(() => {
@@ -16,7 +16,7 @@ export function NoMember() {
 
   return (
     <N.Container>
-      {/* 상단 타이틀 */}
+      {/* 헤더 */}
       <N.Header>
         {/* 오늘 날짜 */}
         <N.Date>TODAY {currentDate}</N.Date>
