@@ -278,6 +278,35 @@ export const WhiteBox = styled.div`
   box-shadow: 0px 2px 13.4px 1px rgba(0, 0, 0, 0.18);
 `;
 
+// 프로필 사진
+export const ContriProfile = styled.div`
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 15%;
+  top: 65.5%;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  z-index: 9999;
+`;
+
+// 닉네임
+export const NickName = styled.div`
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 29%;
+  top: 65.5%;
+  color: #312f34;
+  font-family: "Pretendard Variable";
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 17px; /* 113.333% */
+  letter-spacing: -0.45px;
+  z-index: 9999;
+  text-align: center;s
+`;
+
 // 그래프
 
 export const GraphContainer = styled.div`
@@ -291,7 +320,7 @@ export const GraphContainer = styled.div`
 
 export const PercentageText = styled.div`
   position: absolute;
-  top: 65%; /* 중앙 배치 */
+  top: 52%; /* 기존 50%에서 조정 */
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: "Pretendard Variable";
@@ -346,4 +375,17 @@ export const HighlightText = styled.div`
   line-height: 29px; /* 161.111% */
   letter-spacing: -0.54px;
   width: 199px;
+`;
+
+// 기여도 그래프
+export const GraphWrapper = styled.div`
+  position: absolute;
+  top: 32%;
+  left: 16%;
+  width: 104px;
+  height: 104px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;
