@@ -5,7 +5,8 @@ import WorkDetail from './account/WorkDetail';
 import ChildDetail from './account/ChildDetail';
 import { Child } from './account/Child';
 import { Housework } from './account/Housework';
-import ToDo from './main/ToDo';
+import OurToDo from './main/OurToDo';
+import MyToDo from './main/MyToDo';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route path="/housework" element={<Housework />} />
         <Route path="/workdetail" element={<WorkDetail />} />
         <Route path="/childdetail" element={<ChildDetail />} />
-        <Route path="/todo" element={<ToDo />} />
+        <Route path="/ourtodo" element={<OurToDo />} />
+        <Route path="/mytodo" element={<MyToDo />} />
       </Routes>
     </BrowserRouter>
   );

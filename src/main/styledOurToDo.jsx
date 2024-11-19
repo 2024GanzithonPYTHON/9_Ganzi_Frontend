@@ -210,7 +210,7 @@ export const Add = styled.div`
   height: 81px;
   left: 163px;
   top: 757px;
-  background-image: url('/images/Add.svg');
+  background-image: url('/images/OnAdd.svg');
   background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;

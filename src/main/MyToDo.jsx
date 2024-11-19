@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import * as T from './styledToDo';
+import * as T from './styledOurToDo';
+import { useNavigate } from 'react-router-dom';
 
-function ToDo() {
+export function MyToDo() {
   const [currentDate, setCurrentDate] = useState(''); // 현재 날짜
-  const [isOurTodo, setIsOurTodo] = useState(true); // 현재 탭 상태 (우리/나)
   const [toDos, setToDos] = useState([]); // 할일 데이터
   const [completedTasks, setCompletedTasks] = useState([]); // 완료된 할일 저장
+  const navigate = useNavigate();
 
   // 오늘 날짜 가져오기
   useEffect(() => {
@@ -20,34 +21,16 @@ function ToDo() {
   useEffect(() => {
     setToDos([
       {
-        id: 1,
-        timeOfDay: 'morning',
-        taskName: '길동이 등교 준비',
-        type: 'our',
-      },
-      {
         id: 2,
         timeOfDay: 'morning',
         taskName: '길동이 아침 식사 준비',
         type: 'mine',
       },
       {
-        id: 3,
-        timeOfDay: 'afternoon',
-        taskName: '저녁 준비 및 길동이 저녁 식사 챙기기',
-        type: 'our',
-      },
-      {
         id: 4,
         timeOfDay: 'afternoon',
         taskName: '퇴근 후 저녁 준비 시작',
         type: 'mine',
-      },
-      {
-        id: 5,
-        timeOfDay: 'afternoon',
-        taskName: '식사 후 주방 정리 및 설거지',
-        type: 'our',
       },
       {
         id: 6,
@@ -58,18 +41,9 @@ function ToDo() {
     ]);
   }, []);
 
-  // 현재 선택된 탭에 따라 데이터를 필터링
-  const filteredToDos = toDos.filter(
-    (toDo) => toDo.type === (isOurTodo ? 'our' : 'mine')
-  );
-
   // 오전과 오후 데이터 나누기
-  const morningToDos = filteredToDos.filter(
-    (toDo) => toDo.timeOfDay === 'morning'
-  );
-  const afternoonToDos = filteredToDos.filter(
-    (toDo) => toDo.timeOfDay === 'afternoon'
-  );
+  const morningToDos = toDos.filter((toDo) => toDo.timeOfDay === 'morning');
+  const afternoonToDos = toDos.filter((toDo) => toDo.timeOfDay === 'afternoon');
 
   // 완료된 할일 체크
   const handleCheck = (id) => {
@@ -92,41 +66,29 @@ function ToDo() {
       {/* 우리의 할일 / 나의 할일 토글 버튼 */}
       <T.ToggleContainer>
         {/* 우리의 할일 버튼 */}
-        <T.ToggleButton isActive={isOurTodo} onClick={() => setIsOurTodo(true)}>
-          <T.Icon
-            src={isOurTodo ? '/images/OnPeople.svg' : '/images/People.svg'}
-            alt="우리의 할일 아이콘"
-          />
+        <T.ToggleButton isActive={false} onClick={() => navigate('/ourtodo')}>
+          <T.Icon src="/images/OnPeople.svg" alt="우리의 할일 아이콘" />
           우리의 할일
         </T.ToggleButton>
 
         {/* 나의 할일 버튼 */}
-        <T.ToggleButton
-          isActive={!isOurTodo}
-          onClick={() => setIsOurTodo(false)}
-        >
-          <T.Icon
-            src={isOurTodo ? '/images/Person.svg' : '/images/OnPerson.svg'}
-            alt="나의 할일 아이콘"
-          />
+        <T.ToggleButton isActive={true}>
+          <T.Icon src="/images/Person.svg" alt="나의 할일 아이콘" />
           나의 할일
         </T.ToggleButton>
       </T.ToggleContainer>
 
       {/* 멘트(집안일콕콕정리 / 우리의할일) */}
-      {isOurTodo ? <T.TextOur /> : <T.TextMy />}
+      <T.TextMy />
       {/* 할일 리스트 */}
       <T.ToDoSection>
         {/* 오전 */}
         <T.TimeLabel>오전</T.TimeLabel>
         {morningToDos.map((toDo) => (
           <T.ToDoBox key={toDo.id}>
-            <T.ToDoIcon
-              src={isOurTodo ? '/images/OnPeople.svg' : '/images/OnPerson.svg'}
-              alt="할일 아이콘"
-            />
+            <T.ToDoIcon src="/images/OnPerson.svg" alt="할일 아이콘" />
             <T.ToDoTexts>
-              <T.Ment>{isOurTodo ? '같이해요' : '오늘은 홍길동씨 담당'}</T.Ment>
+              <T.Ment>오늘은 나의 담당</T.Ment>
               <T.TaskName>{toDo.taskName}</T.TaskName>
             </T.ToDoTexts>
             <T.CheckBox
@@ -144,12 +106,9 @@ function ToDo() {
         <T.TimeLabel>오후</T.TimeLabel>
         {afternoonToDos.map((toDo) => (
           <T.ToDoBox key={toDo.id}>
-            <T.ToDoIcon
-              src={isOurTodo ? '/images/OnPeople.svg' : '/images/OnPerson.svg'}
-              alt="할일 아이콘"
-            />
+            <T.ToDoIcon src="/images/OnPerson.svg" alt="할일 아이콘" />
             <T.ToDoTexts>
-              <T.Ment>{isOurTodo ? '같이해요' : '오늘은 홍길동씨 담당'}</T.Ment>
+              <T.Ment>오늘은 나의 담당</T.Ment>
               <T.TaskName>{toDo.taskName}</T.TaskName>
             </T.ToDoTexts>
             <T.CheckBox
@@ -176,4 +135,4 @@ function ToDo() {
   );
 }
 
-export default ToDo;
+export default MyToDo;
