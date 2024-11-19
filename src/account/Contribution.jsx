@@ -36,8 +36,8 @@ const Contribution = () => {
   ];
 
   const compareData = [
-    { name: "홍길동", percentage: 93 },
-    { name: "OOO", percentage: 80 },
+    { name: "홍길동", percentage: 93, contri_per: 93 },
+    { name: "OOO", percentage: 80, contri_per: 80 },
   ];
 
   return (
@@ -76,10 +76,22 @@ const Contribution = () => {
       <C.InfoText style={{ top: "59.9%", left: "41%" }}>
         한달간의 집안일 기여도를 비교해 볼 수 있어요.
       </C.InfoText>
+      <C.ContriProfile>
+        <img src="/images/ContriProfile.svg" />
+      </C.ContriProfile>
+      <C.NickName>홍길동</C.NickName>
       {/* 나 */}
-      <C.WhiteBox />
+      <C.WhiteBox>
+        <CircularGraph contri_per={compareData[0].contri_per} />
+      </C.WhiteBox>
       {/* 상대 */}
-      <C.WhiteBox style={{ left: "71%" }} />
+      <C.WhiteBox style={{ left: "71%" }}>
+        <CircularGraph contri_per={compareData[1].contri_per} />
+      </C.WhiteBox>
+      <C.ContriProfile style={{ left: "58%" }}>
+        <img src="/images/ContriProfile.svg" />
+      </C.ContriProfile>
+      <C.NickName style={{ left: "72%" }}>00</C.NickName>
       <C.HighlightText>
         00씨, 기여도를 높이기 위해 집안일에 더욱 신경써주세요!
       </C.HighlightText>
@@ -102,7 +114,6 @@ const HalfCircleGraph = ({ percentage }) => {
           fill="none"
           stroke="#E5E5E5"
           strokeWidth="10"
-          strokeLinecap="round"
         />
         {/* 퍼센트 반원 */}
         <path
@@ -120,6 +131,47 @@ const HalfCircleGraph = ({ percentage }) => {
       {/* 퍼센트 텍스트 */}
       <C.PercentageText>{percentage}%</C.PercentageText>
     </C.GraphContainer>
+  );
+};
+
+const CircularGraph = ({ contri_per }) => {
+  const radius = 40; // 반지름
+  const strokeWidth = 15; // 선 두께
+  const circumference = 2 * Math.PI * radius; // 원의 둘레
+  const offset = circumference - (contri_per / 100) * circumference; // 채워진 비율
+
+  return (
+    <C.GraphWrapper>
+      <svg width="100" height="100">
+        {/* 연보라색 배경 원 */}
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          fill="none"
+          stroke="#E5D4FF" // 연보라색
+          strokeWidth={strokeWidth}
+        />
+        {/* 보라색 진행 원 */}
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          fill="none"
+          stroke="#8F34FF" // 보라색
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          style={{
+            transform: "rotate(-90deg)", // 시작점을 위쪽에서 왼쪽으로 이동
+            transformOrigin: "50% 50%",
+            transition: "stroke-dashoffset 0.5s ease-in-out", // 애니메이션 효과
+          }}
+        />
+      </svg>
+      {/* 중앙 텍스트 */}
+      <C.PercentageText>{contri_per}%</C.PercentageText>
+    </C.GraphWrapper>
   );
 };
 
