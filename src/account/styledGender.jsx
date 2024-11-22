@@ -8,7 +8,7 @@ export const Container = styled.div`
   height: 852px;
   margin-top: 0px;
   background: white;
-  border: 1px solid black;
+  border: 1px solid #fafafa;
   min-height: 100vh; /* 화면 높이에 맞추어 크기 조절*/
   padding: 0; /* 불필요한 패딩 제거 */
   box-sizing: border-box; /* 패딩이 width에 포함되도록 설정 */
