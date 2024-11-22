@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as WD from './styledWorkDetail';
+import { useNavigate } from 'react-router-dom';
 
 export function WorkDetail() {
   const [isScheduleFixed, setIsScheduleFixed] = useState(null); // 출퇴근 일정함 / 일정하지 않음
@@ -8,6 +9,19 @@ export function WorkDetail() {
 
   const [startWork, setStartWork] = useState(''); // 출근 시간
   const [endWork, setEndWork] = useState(''); // 퇴근 시간
+
+  const navigate = useNavigate();
+
+  const handleSave = () => {
+    const workData = {
+      workDays: selectedDays,
+      startTime: startWork,
+      endTime: endWork,
+    };
+
+    // 데이터를 navigate로 전달
+    navigate('/infoinput', { state: { workData } });
+  };
 
   // 출퇴근 일정 선택
   const toggleSchedule = (isFixed) => setIsScheduleFixed(isFixed);
@@ -41,14 +55,19 @@ export function WorkDetail() {
   return (
     <WD.Container>
       {/* 프로필: 추후 닉네임 변수화 필요 */}
-      <WD.ProfileImg>
-        <img src="/images/ProfileImg.svg" alt="프로필 이미지" />
-      </WD.ProfileImg>
-      <WD.Nickname>홍길동</WD.Nickname>
+      <WD.ProfileSection>
+        <WD.ProfileImg>
+          <img src="/images/ProfileImg.svg" alt="프로필 이미지" />
+        </WD.ProfileImg>
+        <WD.Nickname>홍길동</WD.Nickname>
+      </WD.ProfileSection>
       <WD.InfoText>
-        <span>홍길동씨의 </span>
-        <WD.HighlightText>직장</WD.HighlightText>
-        <span>에 대해 알려주세요.</span>
+        <WD.HighlightText>직장 생활</WD.HighlightText>
+        <span>
+          에 대해 간단히 알려주세요!
+          <br />
+          집콕콕이 더 똑똑해질 거예요.
+        </span>
       </WD.InfoText>
 
       {/* 출퇴근 일정 선택 */}
@@ -68,28 +87,30 @@ export function WorkDetail() {
       </WD.ButtonContainer>
 
       {/* 출근 일자 선택 */}
-      <WD.LabelContainer>
-        {/* 아이콘 */}
-        <WD.ScheduleIcon />
-        <WD.Label>출근 일자</WD.Label>
-      </WD.LabelContainer>
-      <WD.DayContainer>
-        {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
-          <WD.Day
-            key={day}
-            selected={selectedDays.includes(day)}
-            onClick={() => toggleDaySelection(day)}
-          >
-            {day}
-          </WD.Day>
-        ))}
-      </WD.DayContainer>
+      <WD.DaySelectionSection>
+        <WD.LabelContainer>
+          {/* 아이콘 */}
+          <WD.ScheduleIcon />
+          <WD.Label>출근 일자</WD.Label>
+        </WD.LabelContainer>
+        <WD.DayContainer>
+          {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
+            <WD.Day
+              key={day}
+              selected={selectedDays.includes(day)}
+              onClick={() => toggleDaySelection(day)}
+            >
+              {day}
+            </WD.Day>
+          ))}
+        </WD.DayContainer>
 
-      {/* 매일 선택 */}
-      <WD.SelectAllContainer onClick={selectAllDays}>
-        <WD.SelectAllIcon isSelected={allDaysSelected} />
-        <WD.SelectAllText>매일 선택</WD.SelectAllText>
-      </WD.SelectAllContainer>
+        {/* 매일 선택 */}
+        <WD.SelectAllContainer onClick={selectAllDays}>
+          <WD.SelectAllIcon isSelected={allDaysSelected} />
+          <WD.SelectAllText>매일 선택</WD.SelectAllText>
+        </WD.SelectAllContainer>
+      </WD.DaySelectionSection>
 
       {/* 출퇴근 시간 입력 */}
       <WD.TimeContainer>
@@ -127,11 +148,8 @@ export function WorkDetail() {
         </WD.TimeInputContainer>
       </WD.TimeContainer>
 
-      {/* 하단 버튼들 */}
-      <WD.NextBtn>
-        <WD.SecondaryButton>해당사항 없음</WD.SecondaryButton>
-        <WD.PrimaryButton>다음</WD.PrimaryButton>
-      </WD.NextBtn>
+      {/* 하단 버튼 */}
+      <WD.OkButton onClick={() => navigate('/infoinput')}>확인</WD.OkButton>
     </WD.Container>
   );
 }

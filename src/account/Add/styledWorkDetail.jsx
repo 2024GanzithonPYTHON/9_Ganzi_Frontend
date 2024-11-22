@@ -2,6 +2,9 @@ import { styled } from 'styled-components';
 
 //페이지 배경
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   margin: 0 auto;
   width: 393px;
@@ -15,23 +18,25 @@ export const Container = styled.div`
 `;
 
 // ~기본 프로필~
+// 프로필 섹션
+export const ProfileSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+`;
+
 // 프로필 이미지
 export const ProfileImg = styled.div`
-  position: absolute;
-  transform: translate(-50%, -50%); /* 중앙 정렬 */
-  left: 50%;
-  top: 17%;
   width: 120px;
   height: 120px;
-  flex-shrink: 0;
+  background: #efefef;
+  border-radius: 50%;
+  margin-bottom: 20px;
 `;
 
 // 닉네임
 export const Nickname = styled.div`
-  position: absolute;
-  transform: translate(-50%, -50%); /* 중앙 정렬 */
-  left: 50%;
-  top: 26.3%;
   color: #9ea2b0;
   font-family: 'Pretendard Variable';
   font-size: 15px;
@@ -39,21 +44,18 @@ export const Nickname = styled.div`
   font-weight: 600;
   line-height: 17px; /* 113.333% */
   letter-spacing: -0.45px;
+  margin-bottom: 25px;
 `;
 
 // 안내 문구
 export const InfoText = styled.div`
-  position: absolute;
   color: #000;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
-  line-height: 17px; /* 85% */
+  line-height: 1.5; /* 85% */
   letter-spacing: -0.6px;
-  transform: translate(-50%, -50%); /* 중앙 정렬 */
-  left: 50%; //가운데 정렬
   text-align: center;
-  top: 33%;
   width: 330px;
   font-family: 'Pretendard Variable';
 `;
@@ -68,11 +70,11 @@ export const HighlightText = styled.span`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  position: absolute;
   top: 337px;
   left: 29px;
   right: 29px;
   gap: 15px; /* 버튼 간격 */
+  margin-top: 44px;
 `;
 
 // 출퇴근 일정 여부 선택 버튼
@@ -98,13 +100,18 @@ export const ScheduleButton = styled.div`
 
 // ~출근 일자 선택~
 // 출근 일자 선택 컨테이너
+export const DaySelectionSection = styled.div`
+  margin-top: 40px; /* 수정: 고정된 top 대신 여백으로 조정 */
+  width: 100%; /* 전체 화면 너비 */
+  padding: 0 20px; /* 양쪽 여백 */
+`;
+// 출근 일자 선택 컨테이너
 export const LabelContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  position: absolute;
-  top: 390px;
-  left: 29px;
+  margin-bottom: 15px;
+  margin-left: 33px;
 `;
 
 // 출근 일자 라벨
@@ -128,10 +135,7 @@ export const ScheduleIcon = styled.div`
 export const DayContainer = styled.div`
   display: flex;
   justify-content: space-around;
-  position: absolute;
-  top: 420px;
-  left: 29px;
-  right: 29px;
+  margin: auto 33px;
 `;
 
 // 일자 버튼
@@ -158,9 +162,9 @@ export const Day = styled.div`
 export const SelectAllContainer = styled.div`
   display: flex;
   align-items: center;
-  position: absolute;
-  right: 29px;
-  top: 470px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  margin-right: 33px;
   cursor: pointer;
 `;
 
@@ -188,10 +192,8 @@ export const SelectAllText = styled.div`
 // ~출퇴근 시간 입력~
 // 출퇴근 시간 컨테이너
 export const TimeContainer = styled.div`
-  position: absolute;
-  top: 530px;
-  left: 50%;
-  transform: translateX(-50%); // 전체 컨테이너를 가운데 정렬
+  margin-top: 50px;
+  text-align: center;
 `;
 
 // 출퇴근 시간 라벨 컨테이너
@@ -273,44 +275,16 @@ export const DashedLine = styled.div`
   background-size: cover;
 `;
 
-// ~다음 버튼~
-// 다음 버튼 컨테이너
-export const NextBtn = styled.div`
-  position: absolute;
+// 확인 버튼
+export const OkButton = styled.button`
   display: flex;
   justify-content: space-between;
-  transform: translate(-50%, -50%); /* 중앙 정렬 */
-  left: 50%;
-  top: 95%;
   width: 334px;
   height: 57px;
-`;
 
-// 해당사항 없음 버튼
-export const SecondaryButton = styled.button`
-  width: 165px;
-  height: 57px;
-  background: #ffffff;
-  border: 1px solid #8f34ff;
-  border-radius: 15px;
-  font-family: 'Pretendard';
-  font-weight: 700;
-  font-size: 16px;
-  color: #8f34ff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: -0.03em;
-`;
-
-// 다음 버튼
-export const PrimaryButton = styled.button`
-  width: 165px;
-  height: 57px;
   background: #8f34ff;
-  border: none;
   border-radius: 15px;
+  border: none;
   font-family: 'Pretendard';
   font-weight: 700;
   font-size: 16px;
@@ -320,4 +294,6 @@ export const PrimaryButton = styled.button`
   align-items: center;
   justify-content: center;
   letter-spacing: -0.03em;
+  margin-top: auto;
+  margin-bottom: 21px;
 `;
