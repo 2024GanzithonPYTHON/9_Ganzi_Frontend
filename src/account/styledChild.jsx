@@ -8,7 +8,7 @@ export const Container = styled.div`
   width: 393px;
   height: 852px;
   background: white;
-  border: 1px solid black;
+  border: 1px solid #fafafa;
   min-height: 100vh;
   padding: 0;
   box-sizing: border-box;
@@ -183,7 +183,7 @@ export const MinusBtn = styled.button`
   }
 `;
 
-// 완료 버튼
+// 다음 버튼
 export const NextBtn = styled.button`
   position: absolute;
   transform: translate(-50%, -50%);

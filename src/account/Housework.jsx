@@ -7,6 +7,10 @@ export function Housework() {
   const [petCount, setPetCount] = useState(0); // 반려동물 수 상태
   const navigate = useNavigate();
 
+  const goHousework2 = () => {
+    navigate(`/housework2`);
+  };
+
   const times = ["1시간", "1시간 30분", "2시간", "2시간 30분", "사용자 설정"]; // 선택 가능한 시간
   const [selectedTime, setSelectedTime] = useState(null); // 선택된 시간을 관리
   const [customTime, setCustomTime] = useState(""); // 사용자 입력 시간 관리
@@ -43,7 +47,7 @@ export function Housework() {
           >
             {time === "사용자 설정" && selectedTime === "사용자 설정" ? (
               <H.CustomTimeInput
-                type="text"
+                type="number"
                 value={customTime}
                 placeholder="예: 3시간"
                 onChange={handleCustomTimeChange}
@@ -55,7 +59,7 @@ export function Housework() {
         ))}
       </H.TimeButtonContainer>
 
-      <H.NextBtn />
+      <H.NextBtn onClick={goHousework2} />
     </H.Container>
   );
 }

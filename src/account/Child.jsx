@@ -7,6 +7,10 @@ export function Child() {
   const [petCount, setPetCount] = useState(0); // 반려동물 수 상태
   const navigate = useNavigate();
 
+  const goHousework = () => {
+    navigate(`/housework`);
+  };
+
   return (
     <C.Container>
       <C.ProfileImg>
@@ -42,7 +46,7 @@ export function Child() {
           <C.MinusBtn onClick={() => setPetCount(Math.max(0, petCount - 1))} />
         </C.Counter>
       </C.PetCount>
-      <C.NextBtn />
+      <C.NextBtn onClick={goHousework} />
     </C.Container>
   );
 }

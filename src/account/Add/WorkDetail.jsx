@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as WD from './styledWorkDetail';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export function WorkDetail() {
   const [isScheduleFixed, setIsScheduleFixed] = useState(null); // 출퇴근 일정함 / 일정하지 않음
