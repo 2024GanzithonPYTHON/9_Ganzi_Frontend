@@ -15,11 +15,19 @@ export const Container = styled.div`
 // 프로필 이미지
 export const ProfileImg = styled.div`
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
   left: 50%;
   top: 17%;
   width: 120px;
   height: 120px;
+  flex-shrink: 0;
+
+  img {
+    width: 100%; /* 부모의 너비에 맞춤 */
+    height: 100%; /* 부모의 높이에 맞춤 */
+    object-fit: cover; /* 이미지 비율 유지하면서 영역 채움 */
+    border-radius: 50%; /* 원형으로 만들기 (선택사항) */
+  }
 `;
 
 // 닉네임
