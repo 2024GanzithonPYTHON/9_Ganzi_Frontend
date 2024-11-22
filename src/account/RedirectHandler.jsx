@@ -15,9 +15,7 @@ export function RedirectHandler() {
 
       fetchUserInfo(token);
     } else {
-      console.error("Token not found in the URL.");
-      alert("로그인에 실패했습니다. 다시 시도해주세요.");
-      window.location.href = "/register";
+      handleError("Token not found in the URL.");
     }
   }, []);
 
@@ -48,16 +46,31 @@ export function RedirectHandler() {
 
       console.log("Nickname and profile image saved to localStorage");
 
-      alert("로그인에 성공했습니다!");
+      // 팝업이 한 번만 뜨도록 로컬 스토리지에 상태 저장
+      if (!localStorage.getItem("isAlertShown")) {
+        alert("로그인에 성공했습니다!");
+        localStorage.setItem("isAlertShown", "true");
+      }
+
       window.location.href = "/welcome";
     } catch (error) {
-      console.error("Failed to fetch user info:", error.message);
-      alert("사용자 정보를 가져오는 데 실패했습니다. 다시 로그인해주세요.");
-      window.location.href = "/register";
+      handleError("사용자 정보를 가져오는 데 실패했습니다.");
     }
   };
 
-  return <div>Processing Kakao Login...</div>;
+  const handleError = (message) => {
+    console.error(message);
+
+    // 실패 팝업도 한 번만 뜨도록 로컬 스토리지에 상태 저장
+    if (!localStorage.getItem("isAlertShown")) {
+      alert(message + " 다시 로그인해주세요.");
+      localStorage.setItem("isAlertShown", "true");
+    }
+
+    window.location.href = "/register";
+  };
+
+  return <div></div>;
 }
 
 export default RedirectHandler;
