@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Nickname from "./account/Nickname";
 import Gender from "./account/Gender";
 import { Child } from "./account/Child";
@@ -11,6 +11,9 @@ import AddMember from "./account/AddMember";
 import Join from "./account/Join";
 import Invite from "./account/Invite";
 import Contribution from "./account/Contribution";
+import Register from "./account/Register";
+import RedirectHandler from "./account/RedirectHandler";
+import Schedule from "./account/Schedule";
 
 function App() {
   return (
@@ -20,14 +23,17 @@ function App() {
         <Route path="/gender" element={<Gender />} />
         <Route path="/child" element={<Child />} />
         <Route path="/housework" element={<Housework />} />
-        <Route path="/welcome" element={<Welcome />} />{" "}
-        <Route path="/housework2" element={<Housework2 />} />{" "}
-        <Route path="/housework3" element={<Housework3 />} />{" "}
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/housework2" element={<Housework2 />} />
+        <Route path="/housework3" element={<Housework3 />} />
         <Route path="/ready" element={<Ready />} />
-        <Route path="/addmember" element={<AddMember />} />{" "}
+        <Route path="/addmember" element={<AddMember />} />
         <Route path="/join" element={<Join />} />
-        <Route path="/invite" element={<Invite />} />{" "}
+        <Route path="/invite" element={<Invite />} />
         <Route path="/contribution" element={<Contribution />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<RedirectHandler />} />
+        <Route path="/schedule" element={<Schedule />} />
       </Routes>
     </BrowserRouter>
   );
