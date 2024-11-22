@@ -1,19 +1,19 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Nickname from "./account/Nickname";
 import Gender from "./account/Gender";
-import { Child } from "./account/Child";
-import { Housework } from "./account/Housework";
+import Child from "./account/Child";
+import Housework from "./account/Housework";
 import Welcome from "./account/Welcome";
 import Housework2 from "./account/Housework2";
 import Housework3 from "./account/Housework3";
-import { Ready } from "./account/Ready";
+import Ready from "./account/Ready";
 import AddMember from "./account/AddMember";
-import Join from "./account/Join";
-import Invite from "./account/Invite";
-import Contribution from "./account/Contribution";
+import Join from "./invite/Join";
+import Invite from "./invite/Invite";
 import Register from "./account/Register";
 import RedirectHandler from "./account/RedirectHandler";
 import Schedule from "./account/Schedule";
+import Contribution from "./contribution/Contribution";
 
 function App() {
   return (

@@ -1,7 +1,5 @@
-// Contribution.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components"; // styled-components 사용
 import * as C from "./styledContribution";
 
 const Contribution = () => {
