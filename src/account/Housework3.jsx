@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as H from "./styledHousework2";
 
@@ -17,6 +17,26 @@ const tasks = [
 export function Housework3() {
   const navigate = useNavigate();
   const [selectedTasks, setSelectedTasks] = useState([]);
+  const [nickname, setNickname] = useState(""); // 닉네임 상태
+  const [profileImage, setProfileImage] = useState(""); // 프로필 이미지 상태
+
+  // localStorage에서 닉네임과 프로필 이미지 가져오기
+  useEffect(() => {
+    const storedNickname = localStorage.getItem("nickname");
+    const storedProfileImage = localStorage.getItem("profileImage");
+
+    if (storedNickname) {
+      setNickname(storedNickname);
+    } else {
+      console.error("닉네임 정보가 없습니다.");
+    }
+
+    if (storedProfileImage) {
+      setProfileImage(storedProfileImage);
+    } else {
+      console.error("프로필 이미지 정보가 없습니다.");
+    }
+  }, []);
 
   const goReady = () => {
     navigate(`/ready`);
@@ -32,10 +52,15 @@ export function Housework3() {
 
   return (
     <H.Container>
+      {/* 프로필 이미지 */}
       <H.ProfileImg>
-        <img src="/images/ProfileImg.svg" alt="프로필 이미지" />
+        <img
+          src={profileImage || "/images/defaultProfileImg.svg"}
+          alt="프로필 이미지"
+        />
       </H.ProfileImg>
-      <H.Nickname>홍길동</H.Nickname>
+      {/* 닉네임 */}
+      <H.Nickname>{nickname || "사용자"}</H.Nickname>
 
       <H.InfoText>
         어떤 집안일을 <H.HighlightText>잘하시나요?</H.HighlightText>
