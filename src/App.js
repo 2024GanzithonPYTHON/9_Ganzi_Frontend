@@ -7,7 +7,7 @@ import Welcome from "./account/Welcome";
 import Housework2 from "./account/Housework2";
 import Housework3 from "./account/Housework3";
 import Ready from "./account/Ready";
-import AddMember from "./account/AddMember";
+import AddMember from "./invite/AddMember";
 import Join from "./invite/Join";
 import Invite from "./invite/Invite";
 import Register from "./account/Register";
