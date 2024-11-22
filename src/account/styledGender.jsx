@@ -23,6 +23,13 @@ export const ProfileImg = styled.div`
   width: 120px;
   height: 120px;
   flex-shrink: 0;
+
+  img {
+    width: 100%; /* 부모의 너비에 맞춤 */
+    height: 100%; /* 부모의 높이에 맞춤 */
+    object-fit: cover; /* 이미지 비율 유지하면서 영역 채움 */
+    border-radius: 50%; /* 원형으로 만들기 (선택사항) */
+  }
 `;
 
 // 닉네임
@@ -128,7 +135,6 @@ export const AgeButton = styled.button`
   font-size: 14px; /* 글자 크기 */
   color: ${({ isSelected }) =>
     isSelected ? '#fff' : '#9EA2B0'}; /* 선택된 경우 글자 색상 */
-  display: flex;
   align-items: center;
   justify-content: center;
   font-style: normal;
@@ -139,6 +145,6 @@ export const AgeButton = styled.button`
 
   &:hover {
     background-color: ${({ isSelected }) =>
-      isSelected ? "#7b2fd6" : "#e5e5e5"};
+      isSelected ? '#7b2fd6' : '#e5e5e5'};
   }
 `;
