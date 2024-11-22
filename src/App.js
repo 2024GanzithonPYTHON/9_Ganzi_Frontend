@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+
 import Nickname from './account/Nickname';
 import Gender from './account/Gender';
 import WorkDetail from './account/WorkDetail';
@@ -7,6 +8,8 @@ import { Child } from './account/Child';
 import { Housework } from './account/Housework';
 import OurToDo from './main/OurToDo';
 import MyToDo from './main/MyToDo';
+
+import InfoInput from './account/InfoInput';
 
 function App() {
   return (
@@ -20,6 +23,7 @@ function App() {
         <Route path="/childdetail" element={<ChildDetail />} />
         <Route path="/ourtodo" element={<OurToDo />} />
         <Route path="/mytodo" element={<MyToDo />} />
+        <Route path="/infoinput" element={<InfoInput />} />
       </Routes>
     </BrowserRouter>
   );
