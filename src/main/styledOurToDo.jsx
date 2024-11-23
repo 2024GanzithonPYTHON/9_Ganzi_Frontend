@@ -9,9 +9,14 @@ export const PageContainer = styled.div`
   background-color: #fafafa;
   border: 1px solid black;
   min-height: 100vh; // 화면 높이에 맞추어 크기 조절
-  padding: 20px 35px;
   box-sizing: border-box; // 패딩 width에 포함
   overflow-y: auto; // 세로 스크롤 활성화
+  overflow-x: hidden; // 가로 스크롤 제거
+`;
+
+export const Content = styled.div`
+  position: relative;
+  padding: 20px 35px;
 `;
 
 // 페이지 헤더 컨테이너
@@ -205,22 +210,25 @@ export const FooterButton = styled.button`
 `;
 
 // 푸터
+
 export const FooterBackground = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  bottom: 0; // 하단 위치 고정
+  left: 0; // 페이지의 왼쪽 기준
+  width: 393px;
   height: 74px;
-  left: 0;
+  padding: 0px;
+  margin-left: 0px;
   background-color: #fff;
+  margin-bottom: 0px;
 `;
 
 // 일정 조정 버튼
 export const Cal = styled.div`
-  position: absolute;
   width: 36px;
   height: 46px;
-  left: 55px;
-  top: 792px;
   background-image: url('/images/Cal.svg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -229,11 +237,8 @@ export const Cal = styled.div`
 
 // 할일 추가 버튼
 export const Add = styled.div`
-  position: absolute;
   width: 60px;
   height: 81px;
-  left: 163px;
-  top: 757px;
   background-image: url('/images/OnAdd.svg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -242,11 +247,8 @@ export const Add = styled.div`
 
 // 관리 모드 완료 버튼
 export const EditOut = styled.div`
-  position: absolute;
   width: 60px;
   height: 81px;
-  left: 163px;
-  top: 757px;
   background-image: url('/images/EditOut.svg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -255,11 +257,9 @@ export const EditOut = styled.div`
 
 // 기여도 버튼
 export const Contribution = styled.div`
-  position: absolute;
   width: 53px;
   height: 46px;
-  left: 285px;
-  top: 792px;
+
   background-image: url('/images/Contribution.svg');
   background-size: cover;
   background-repeat: no-repeat;
