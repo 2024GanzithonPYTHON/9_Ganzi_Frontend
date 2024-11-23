@@ -1,34 +1,75 @@
-// Contribution.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components"; // styled-components 사용
 import * as C from "./styledContribution";
 
 const Contribution = () => {
+  const [highlightPercentage, setHighlightPercentage] = useState(0); // 비교 텍스트의 퍼센트
   const navigate = useNavigate();
+
+  const fetchContributionData = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register"); // 로그인 페이지로 이동
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://ganzithon.hyunwoo9930.store/todo/contribution",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch contribution data: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("Fetched Contribution Data:", data);
+
+      // 응답 데이터에서 하이라이트 퍼센트만 설정
+      setHighlightPercentage(data.highlight || 0); // API 응답에 따라 퍼센트 값 설정
+    } catch (error) {
+      console.error("Error fetching contribution data:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchContributionData(); // 컴포넌트가 렌더링될 때 데이터 가져오기
+  }, []);
 
   const goBack = () => {
     navigate(-1);
   };
 
+  // 더미 데이터 (기존 제공된 데이터 유지)
   const timelineData = [
     {
-      day: "월",
-      date: "11",
+      day: "토",
+      date: "23",
       morningTask: "오전 집안일 모두 완료!",
       eveningTask: "오후 집안일 2개 남음",
-      percentage: 91,
+      percentage: 66,
     },
     {
-      day: "일",
-      date: "10",
+      day: "금",
+      date: "22",
       morningTask: "오전 집안일 1개 남음",
       eveningTask: "오후 집안일 2개 남음",
       percentage: 80,
     },
     {
-      day: "토",
-      date: "10",
+      day: "목",
+      date: "21",
       morningTask: "오전 집안일 3개 남음",
       eveningTask: "오후 집안일 4개 남음",
       percentage: 45,
@@ -36,20 +77,22 @@ const Contribution = () => {
   ];
 
   const compareData = [
-    { name: "홍길동", percentage: 93, contri_per: 93 },
-    { name: "OOO", percentage: 80, contri_per: 80 },
+    { name: "유다현", percentage: 93, contri_per: 93 },
+    { name: "신예진", percentage: 80, contri_per: 80 },
   ];
 
   return (
     <C.Container>
       <C.LightGrayBox />
       <C.BackBtn onClick={goBack} />
-      <C.DateTitle>TODAY 2024년 11월 11일</C.DateTitle>
+      <C.DateTitle>TODAY 2024년 11월 23일</C.DateTitle>
       <C.SectionTitle>최근 우리의 집안일 기여도</C.SectionTitle>
       <C.InfoIcon />
       <C.InfoText>3일간의 집안일 히스토리를 볼 수 있어요.</C.InfoText>
       <C.GraphIcon /> <C.MiniGraphIcon />
-      <C.HighlightBox>00씨 보다 기여도가 36% 더 높아요</C.HighlightBox>{" "}
+      <C.HighlightBox>
+        신예진씨 보다 기여도가 {highlightPercentage}% 더 높아요
+      </C.HighlightBox>
       <C.TimelineContainer>
         {timelineData.map((data, index) => (
           <C.TimelineItem key={index}>
@@ -79,7 +122,7 @@ const Contribution = () => {
       <C.ContriProfile>
         <img src="/images/ContriProfile.svg" />
       </C.ContriProfile>
-      <C.NickName>홍길동</C.NickName>
+      <C.NickName>유다현</C.NickName>
       {/* 나 */}
       <C.WhiteBox>
         <CircularGraph contri_per={compareData[0].contri_per} />
@@ -89,11 +132,11 @@ const Contribution = () => {
         <CircularGraph contri_per={compareData[1].contri_per} />
       </C.WhiteBox>
       <C.ContriProfile style={{ left: "58%" }}>
-        <img src="/images/ContriProfile.svg" />
+        <img src="/images/ContriProfile2.svg" />
       </C.ContriProfile>
-      <C.NickName style={{ left: "72%" }}>00</C.NickName>
+      <C.NickName style={{ left: "72%" }}>신예진</C.NickName>
       <C.HighlightText>
-        00씨, 기여도를 높이기 위해 집안일에 더욱 신경써주세요!
+        신예진씨, 기여도를 높이기 위해 집안일에 더욱 신경써주세요!
       </C.HighlightText>
     </C.Container>
   );

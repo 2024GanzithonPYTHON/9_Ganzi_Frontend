@@ -1,31 +1,34 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
 import Nickname from './account/Nickname';
 import Gender from './account/Gender';
+
+import Child from './account/Child';
+import Housework from './account/Housework';
+import Welcome from './account/Welcome';
+import Housework2 from './account/Housework2';
+import Housework3 from './account/Housework3';
+import Ready from './account/Ready';
+import AddMember from './invite/AddMember';
+import Join from './invite/Join';
+import Invite from './invite/Invite';
+import Register from './account/Register';
+import RedirectHandler from './account/RedirectHandler';
+import Schedule from './account/Schedule';
+import Contribution from './contribution/Contribution';
+import Land1 from './landing/Land1';
+import Land2 from './landing/Land2';
+import Land3 from './landing/Land3';
+import Land4 from './landing/Land4';
+
 import WorkDetail from './Add/WorkDetail';
 import ChildDetail from './Add/ChildDetail';
-import { Child } from './account/Child';
-import { Housework } from './account/Housework';
+import Loading from './main/Loading';
 import OurToDo from './main/OurToDo';
 import MyToDo from './main/MyToDo';
 import AddChild from './Add/AddChild';
 import AddPet from './Add/AddPet';
-
 import InfoInput from './Add/InfoInput';
-import Welcome from './account/Welcome';
-import Housework2 from './account/Housework2';
-import Housework3 from './account/Housework3';
-import { Ready } from './account/Ready';
-import AddMember from './account/AddMember';
-import Join from './account/Join';
-import Invite from './account/Invite';
-import Contribution from './account/Contribution';
-import Register from './account/Register';
-import RedirectHandler from './account/RedirectHandler';
-import Schedule from './account/Schedule';
 import NoMember from './main/NoMember';
-
-import Loading from './main/Loading';
 
 function App() {
   return (
@@ -56,6 +59,10 @@ function App() {
         <Route path="/addpet" element={<AddPet />} />
         <Route path="/main" element={<NoMember />} />
         <Route path="/loading" element={<Loading />} />
+        <Route path="/land1" element={<Land1 />} />
+        <Route path="/land2" element={<Land2 />} />
+        <Route path="/land3" element={<Land3 />} />
+        <Route path="/land4" element={<Land4 />} />
       </Routes>
     </BrowserRouter>
   );

@@ -16,7 +16,7 @@ const tasks = [
 
 export function Housework3() {
   const navigate = useNavigate();
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedTasks, setSelectedTasks] = useState([]); // 선택된 작업 ID
   const [nickname, setNickname] = useState(""); // 닉네임 상태
   const [profileImage, setProfileImage] = useState(""); // 프로필 이미지 상태
 
@@ -38,8 +38,57 @@ export function Housework3() {
     }
   }, []);
 
+  // 선택된 작업을 서버로 전송하는 함수
+  const sendPreferenceTask = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register"); // 로그인 페이지로 이동
+      return;
+    }
+
+    // 선택된 작업의 label 값 가져오기
+    const selectedLabels = tasks
+      .filter((task) => selectedTasks.includes(task.id))
+      .map((task) => task.label);
+
+    // 스트링 형태로 결합
+    const preferenceTask = selectedLabels.join(", ");
+
+    try {
+      const response = await fetch("/user/additionalInfo", {
+        method: "PATCH",
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          preferenceTask, // 선택한 작업 정보
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to send preference task: ${response.status}`);
+      }
+
+      console.log("Preference task successfully sent to backend.");
+      navigate(`/ready`); // 성공적으로 저장되면 다음 페이지로 이동
+    } catch (error) {
+      console.error("Error sending preference task:", error.message);
+      alert(
+        "잘하는 집안일 정보를 저장하는 데 실패했습니다. 다시 시도해주세요."
+      );
+    }
+  };
+
   const goReady = () => {
-    navigate(`/ready`);
+    if (selectedTasks.length === 0) {
+      alert("하나 이상의 작업을 선택해주세요.");
+      return;
+    }
+
+    sendPreferenceTask(); // 서버로 데이터 전송
   };
 
   const toggleTaskSelection = (taskId) => {
@@ -87,7 +136,7 @@ export function Housework3() {
 
       <H.SkipText>
         잘하는 집안일을 모르겠어요.
-        <span className="skip" onClick={goReady}>
+        <span className="skip" onClick={() => navigate(`/ready`)}>
           건너뛸래요
         </span>
       </H.SkipText>

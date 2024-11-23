@@ -374,7 +374,8 @@ export const HighlightText = styled.div`
   font-weight: 600;
   line-height: 29px; /* 161.111% */
   letter-spacing: -0.54px;
-  width: 199px;
+  width: 220px;
+  text-align: center;
 `;
 
 // 기여도 그래프

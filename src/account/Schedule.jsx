@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import * as S from "./styledSchedule";
 
 const Schedule = () => {
-  const [schedule, setSchedule] = useState("");
-  const [duration, setDuration] = useState("");
-  const [startTime, setStartTime] = useState({ hour: "00", minute: "00" });
-  const [currentWeek, setCurrentWeek] = useState([]);
+  const [schedule, setSchedule] = useState(""); // 일정 이름
+  const [duration, setDuration] = useState(""); // 일정 지속 시간
+  const [startTime, setStartTime] = useState({ hour: "00", minute: "00" }); // 시작 시간
+  const [currentWeek, setCurrentWeek] = useState([]); // 현재 주 정보
   const navigate = useNavigate();
 
   const goMain = () => {
@@ -19,14 +19,11 @@ const Schedule = () => {
 
   // 현재 주의 날짜 계산
   useEffect(() => {
-    const today = new Date(); // 오늘 날짜
-    const dayIndex = today.getDay(); // 요일 인덱스 (0: 일요일, 1: 월요일, ...)
-    const startOfWeek = new Date(today); // 주 시작일 설정
+    const today = new Date();
+    const dayIndex = today.getDay();
+    const startOfWeek = new Date(today);
+    const adjustedDayIndex = dayIndex === 0 ? 7 : dayIndex; // 일요일 처리
 
-    // 요일 인덱스를 월요일 시작 기준으로 변경 (일요일은 7로 설정)
-    const adjustedDayIndex = dayIndex === 0 ? 7 : dayIndex;
-
-    // 이번 주 월요일 날짜 계산
     startOfWeek.setDate(today.getDate() - adjustedDayIndex + 1);
 
     const week = Array.from({ length: 7 }, (_, i) => {
@@ -34,11 +31,11 @@ const Schedule = () => {
       date.setDate(startOfWeek.getDate() + i);
       return {
         day: ["월", "화", "수", "목", "금", "토", "일"][i],
-        date: date.getDate(), // 날짜 값만 저장
+        date: date.getDate(),
       };
     });
 
-    setCurrentWeek(week); // 주 데이터 저장
+    setCurrentWeek(week);
   }, []);
 
   // 날짜 형식을 "TODAY YYYY년 MM월 DD일"로 변환
@@ -61,20 +58,59 @@ const Schedule = () => {
     setStartTime((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 일정 추가 버튼
-  const handleSubmit = () => {
-    console.log("일정:", schedule);
-    console.log("시간:", duration);
-    console.log("시작 시간:", `${startTime.hour}:${startTime.minute}`);
-    alert("일정이 저장되었습니다!");
+  // 일정 전송 함수
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register");
+      return;
+    }
+
+    // 현재 날짜와 사용자가 입력한 시간을 조합해 startTime 생성
+    const today = new Date();
+    const formattedStartTime = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      parseInt(startTime.hour),
+      parseInt(startTime.minute)
+    ).toISOString();
+
+    try {
+      const response = await fetch(
+        "https://ganzithon.hyunwoo9930.store/schedule",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: schedule, // 일정 이름
+            duration: parseInt(duration), // 일정 지속 시간
+            startTime: formattedStartTime, // ISO 형식의 시작 시간
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to save schedule: ${response.status}`);
+      }
+
+      alert("일정이 저장되었습니다!");
+      goMain(); // 메인 페이지로 이동
+    } catch (error) {
+      console.error("Error saving schedule:", error.message);
+      alert("일정을 저장하는 데 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
     <S.Container>
-      {/* 상단 헤더 */}
-      <S.BackBtn onClick={goBack} /> {/* 요청한 BackBtn 스타일로 변경 */}
+      <S.BackBtn onClick={goBack} />
       <S.DateTitle>{getFormattedDate()}</S.DateTitle>
-      {/* 요일과 날짜 */}
       <S.WeekWrapper>
         {currentWeek.map((item, index) => {
           const today = new Date();
@@ -83,13 +119,12 @@ const Schedule = () => {
 
           return (
             <S.Day key={index} isToday={isToday}>
-              <span>{item.day}</span> {/* 요일 */}
-              <span>{item.date}</span> {/* 날짜 */}
+              <span>{item.day}</span>
+              <span>{item.date}</span>
             </S.Day>
           );
         })}
       </S.WeekWrapper>
-      {/* 일정 입력 */}
       <S.Label>추가할 일정</S.Label>
       <S.LightGrayBox />
       <S.Input
@@ -98,20 +133,18 @@ const Schedule = () => {
         value={schedule}
         onChange={(e) => setSchedule(e.target.value)}
       />
-      {/* 일정 시간 */}
       <S.Label style={{ marginTop: "20px" }}>일정 시간</S.Label>
       <S.DurationWrapper>
-        {["1시간", "2시간", "3시간", "온종일"].map((item, index) => (
+        {["1", "2", "3", "24"].map((item, index) => (
           <S.DurationButton
             key={index}
             active={duration === item}
             onClick={() => handleDurationClick(item)}
           >
-            {item}
+            {item === "24" ? "온종일" : `${item}시간`}
           </S.DurationButton>
         ))}
       </S.DurationWrapper>
-      {/* 일정 시작 시간 */}
       <S.Label style={{ marginTop: "70px" }}>일정 시작 시각</S.Label>
       <S.TimeWrapper>
         <S.TimeInput
@@ -138,11 +171,10 @@ const Schedule = () => {
           ))}
         </S.TimeInput>
       </S.TimeWrapper>
-      {/* 완료 버튼 */}
       <S.CompleteBtn
-        onClick={() => {
-          goMain();
-          handleSubmit();
+        onClick={async () => {
+          await handleSubmit(); // handleSubmit 완료 대기
+          goMain(); // main 페이지로 이동
         }}
       />
     </S.Container>
