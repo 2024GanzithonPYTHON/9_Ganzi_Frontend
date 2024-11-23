@@ -24,8 +24,48 @@ export function Child() {
     }
   }, [navigate]);
 
+  // children과 pet 데이터를 서버로 전송하는 함수
+  const sendChildrenAndPet = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register"); // 로그인 페이지로 이동
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://ganzithon.hyunwoo9930.store/user/additionalInfo",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            children: childCount, // 자녀 수
+            pet: petCount, // 반려동물 수
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to send children and pet: ${response.status}`);
+      }
+
+      console.log("Children and pet data successfully sent to backend.");
+      navigate(`/housework`); // 성공적으로 저장되면 다음 페이지로 이동
+    } catch (error) {
+      console.error("Error sending children and pet:", error.message);
+      alert(
+        "자녀와 반려동물 정보를 저장하는 데 실패했습니다. 다시 시도해주세요."
+      );
+    }
+  };
+
   const goHousework = () => {
-    navigate(`/housework`);
+    sendChildrenAndPet(); // API 호출
   };
 
   return (
