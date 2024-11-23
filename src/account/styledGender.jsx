@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 // 페이지 배경
 export const Container = styled.div`
@@ -39,7 +39,7 @@ export const Nickname = styled.div`
   left: 50%;
   top: 26.3%;
   color: #9ea2b0;
-  font-family: "Pretendard Variable";
+  font-family: 'Pretendard Variable';
   font-size: 15px;
   font-style: normal;
   font-weight: 600;
@@ -60,7 +60,7 @@ export const InfoText = styled.div`
   left: 65%;
   top: 33%;
   width: 330px;
-  font-family: "Pretendard Variable";
+  font-family: 'Pretendard Variable';
 `;
 
 // 강조 문구
@@ -78,13 +78,13 @@ export const Male = styled.button`
   height: 96px;
   flex-shrink: 0;
   background-image: url(${({ isSelected }) =>
-    isSelected ? "/images/OnMaleIcon.svg" : "/images/MaleIcon.svg"});
+    isSelected ? '/images/OnMaleIcon.svg' : '/images/MaleIcon.svg'});
   background-color: transparent;
   border: none;
   cursor: pointer;
 
   &:hover {
-    background-image: url("images/OnMaleIcon.svg");
+    background-image: url('images/OnMaleIcon.svg');
   }
 `;
 
@@ -98,13 +98,13 @@ export const Female = styled.button`
   height: 98px;
   flex-shrink: 0;
   background-image: url(${({ isSelected }) =>
-    isSelected ? "/images/OnFemaleIcon.svg" : "/images/FemaleIcon.svg"});
+    isSelected ? '/images/OnFemaleIcon.svg' : '/images/FemaleIcon.svg'});
   background-color: transparent;
   border: none;
   cursor: pointer;
 
   &:hover {
-    background-image: url("images/OnFemaleIcon.svg");
+    background-image: url('images/OnFemaleIcon.svg');
   }
 `;
 
@@ -117,7 +117,7 @@ export const NextBtn = styled.button`
   width: 334px;
   height: 57px;
   flex-shrink: 0;
-  background-image: url("/images/NextBtn.svg");
+  background-image: url('/images/NextBtn.svg');
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -129,22 +129,22 @@ export const AgeButton = styled.button`
   height: 87px; /* 버튼의 높이 */
   margin: 10px; /* 버튼 간의 여백 */
   background-color: ${({ isSelected }) =>
-    isSelected ? "#8F34FF" : "transparent"}; /* 선택된 경우 보라색 */
-  border: 1px solid ${({ isSelected }) => (isSelected ? "#8F34FF" : "#EFEFEF")}; /* 테두리 색상 */
+    isSelected ? '#8F34FF' : 'transparent'}; /* 선택된 경우 보라색 */
+  border: 1px solid ${({ isSelected }) => (isSelected ? '#8F34FF' : '#EFEFEF')}; /* 테두리 색상 */
   cursor: pointer; /* 커서 스타일 */
   font-size: 14px; /* 글자 크기 */
   color: ${({ isSelected }) =>
-    isSelected ? "#fff" : "#9EA2B0"}; /* 선택된 경우 글자 색상 */
+    isSelected ? '#fff' : '#9EA2B0'}; /* 선택된 경우 글자 색상 */
   align-items: center;
   justify-content: center;
   font-style: normal;
   font-weight: 600;
   line-height: 17px;
   letter-spacing: -0.6px;
-  font-family: "Pretendard Variable";
+  font-family: 'Pretendard Variable';
 
   &:hover {
     background-color: ${({ isSelected }) =>
-      isSelected ? "#7b2fd6" : "#e5e5e5"};
+      isSelected ? '#7b2fd6' : '#e5e5e5'};
   }
 `;
