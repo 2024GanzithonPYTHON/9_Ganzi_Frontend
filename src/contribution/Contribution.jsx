@@ -1,14 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as C from "./styledContribution";
 
 const Contribution = () => {
+  const [highlightPercentage, setHighlightPercentage] = useState(0); // 비교 텍스트의 퍼센트
   const navigate = useNavigate();
+
+  const fetchContributionData = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register"); // 로그인 페이지로 이동
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://ganzithon.hyunwoo9930.store/todo/contribution",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch contribution data: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("Fetched Contribution Data:", data);
+
+      // 응답 데이터에서 하이라이트 퍼센트만 설정
+      setHighlightPercentage(data.highlight || 0); // API 응답에 따라 퍼센트 값 설정
+    } catch (error) {
+      console.error("Error fetching contribution data:", error.message);
+      alert("기여도 데이터를 가져오는 데 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  useEffect(() => {
+    fetchContributionData(); // 컴포넌트가 렌더링될 때 데이터 가져오기
+  }, []);
 
   const goBack = () => {
     navigate(-1);
   };
 
+  // 더미 데이터 (기존 제공된 데이터 유지)
   const timelineData = [
     {
       day: "월",
@@ -47,7 +91,9 @@ const Contribution = () => {
       <C.InfoIcon />
       <C.InfoText>3일간의 집안일 히스토리를 볼 수 있어요.</C.InfoText>
       <C.GraphIcon /> <C.MiniGraphIcon />
-      <C.HighlightBox>00씨 보다 기여도가 36% 더 높아요</C.HighlightBox>{" "}
+      <C.HighlightBox>
+        00씨 보다 기여도가 {highlightPercentage}% 더 높아요
+      </C.HighlightBox>
       <C.TimelineContainer>
         {timelineData.map((data, index) => (
           <C.TimelineItem key={index}>
