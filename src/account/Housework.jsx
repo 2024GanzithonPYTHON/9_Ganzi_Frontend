@@ -28,8 +28,53 @@ export function Housework() {
     }
   }, [navigate]);
 
+  // 가사 참여 시간을 전송하는 함수
+  const sendParticipationTime = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register");
+      return;
+    }
+
+    // 사용자가 선택한 시간 또는 입력한 사용자 설정 시간
+    const participationTime =
+      selectedTime === "사용자 설정" ? customTime : selectedTime;
+
+    if (!participationTime || participationTime.trim() === "") {
+      alert("가사 참여 시간을 선택하거나 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/user/additionalInfo", {
+        method: "PATCH",
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          participationTime, // 스트링형으로 전송
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to send participation time: ${response.status}`
+        );
+      }
+
+      console.log("Participation time successfully sent to backend.");
+      navigate(`/housework2`); // 성공적으로 저장되면 다음 페이지로 이동
+    } catch (error) {
+      console.error("Error sending participation time:", error.message);
+      alert("가사 참여 시간 저장에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   const goHousework2 = () => {
-    navigate(`/housework2`);
+    sendParticipationTime();
   };
 
   const handleTimeClick = (time) => {
@@ -64,7 +109,7 @@ export function Housework() {
           >
             {time === "사용자 설정" && selectedTime === "사용자 설정" ? (
               <H.CustomTimeInput
-                type="number"
+                type="text"
                 value={customTime}
                 placeholder="예: 3시간"
                 onChange={handleCustomTimeChange}
@@ -76,6 +121,7 @@ export function Housework() {
         ))}
       </H.TimeButtonContainer>
 
+      {/* 다음 버튼 */}
       <H.NextBtn onClick={goHousework2} />
     </H.Container>
   );

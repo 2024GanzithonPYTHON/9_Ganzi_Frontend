@@ -31,6 +31,58 @@ export function Gender() {
     }
   }, [navigate]);
 
+  const sendGenderAndAge = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register");
+      return;
+    }
+
+    console.log("Authorization Token:", `Bearer ${token}`); // 토큰 디버깅 로그
+
+    try {
+      const requestBody = {
+        gender: selectedGender,
+        age: selectedAge,
+      };
+
+      console.log("Request Body:", requestBody); // 요청 데이터 디버깅 로그
+
+      const response = await fetch("/user/additionalInfo", {
+        method: "PATCH",
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      // 요청 헤더 디버깅
+      console.log("Request Headers:", {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
+
+      // 응답 디버깅
+      console.log("Response Status:", response.status);
+      console.log("Response Headers:", response.headers);
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error("Server Error Response:", errorResponse); // 서버 에러 응답 디버깅
+        throw new Error(`Failed to send gender and age: ${response.status}`);
+      }
+
+      console.log("Gender and age successfully sent to backend.");
+      navigate(`/child`); // 성공적으로 저장되면 다음 페이지로 이동
+    } catch (error) {
+      console.error("Error sending gender and age:", error.message);
+      alert("성별과 연령대 저장에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   const goChild = () => {
     if (!selectedGender || !selectedAge) {
       alert("성별과 연령대를 선택해주세요.");
@@ -40,15 +92,17 @@ export function Gender() {
     console.log("Selected Gender:", selectedGender);
     console.log("Selected Age:", selectedAge);
 
-    navigate(`/child`);
+    sendGenderAndAge(); // 선택한 값 전송
   };
 
   const handleGenderClick = (gender) => {
-    setSelectedGender(gender);
+    const value = gender === "남성" ? "MALE" : "FEMALE";
+    setSelectedGender(value);
   };
 
   const handleAgeClick = (age) => {
-    setSelectedAge(age);
+    const value = age.replace("대", ""); // "10대" -> "10"으로 변환
+    setSelectedAge(value);
   };
 
   return (
@@ -65,11 +119,11 @@ export function Gender() {
 
       {/* 성별 아이콘 버튼 */}
       <G.Male
-        isSelected={selectedGender === "남성"}
+        isSelected={selectedGender === "MALE"}
         onClick={() => handleGenderClick("남성")}
       />
       <G.Female
-        isSelected={selectedGender === "여성"}
+        isSelected={selectedGender === "FEMALE"}
         onClick={() => handleGenderClick("여성")}
       />
 
@@ -78,7 +132,7 @@ export function Gender() {
         {["10대", "20대", "30대", "40대", "50대", "기타"].map((age) => (
           <G.AgeButton
             key={age}
-            isSelected={selectedAge === age}
+            isSelected={selectedAge === age.replace("대", "")}
             onClick={() => handleAgeClick(age)}
           >
             {age}

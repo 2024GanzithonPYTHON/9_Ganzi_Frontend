@@ -1,16 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as J from "./styledJoin";
 
 export function Join() {
+  const [inviteCode, setInviteCode] = useState(""); // 사용자가 입력한 초대 코드
   const navigate = useNavigate();
 
-  const goInvite = () => {
-    navigate(`/invite`);
+  const handleInputChange = (e) => {
+    setInviteCode(e.target.value); // 입력된 초대 코드 저장
   };
 
-  const goJoin = () => {
-    navigate(`/join`);
+  const submitInviteCode = async () => {
+    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/register"); // 로그인 페이지로 이동
+      return;
+    }
+
+    try {
+      const response = await fetch("/team/match", {
+        method: "POST",
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inviteCode, // 입력한 초대 코드 전송
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          alert("초대 코드를 찾을 수 없습니다. 다시 확인해주세요.");
+        } else if (response.status === 403) {
+          alert("접근이 거부되었습니다. 유효한 초대 코드인지 확인하세요.");
+        } else {
+          alert("초대 코드 매칭 중 오류가 발생했습니다.");
+        }
+        throw new Error(`Failed to match invite code: ${response.status}`);
+      }
+
+      const result = await response.json(); // 성공 시 서버 응답 데이터
+      alert("초대 코드가 매칭되었습니다!");
+      console.log("Matched Team Info:", result);
+
+      // 매칭 성공 시, 이후 작업
+      navigate("/dashboard"); // 예: 팀 대시보드로 이동
+    } catch (error) {
+      console.error("Error matching invite code:", error.message);
+    }
   };
 
   const goBack = () => {
@@ -18,15 +58,17 @@ export function Join() {
   };
 
   return (
-    <>
-      <J.Container>
-        <J.BackBtn onClick={goBack} />
-        <J.PageTitle>멤버 추가</J.PageTitle>
-        <J.InfoText>초대코드를 입력해주세요.</J.InfoText>{" "}
-        <J.InputBox placeholder="초대코드 입력" />
-        <J.ConfirmBtn />
-      </J.Container>
-    </>
+    <J.Container>
+      <J.BackBtn onClick={goBack} />
+      <J.PageTitle>멤버 추가</J.PageTitle>
+      <J.InfoText>초대코드를 입력해주세요.</J.InfoText>
+      <J.InputBox
+        placeholder="초대코드 입력"
+        value={inviteCode}
+        onChange={handleInputChange} // 입력 변경 시 초대 코드 상태 업데이트
+      />
+      <J.ConfirmBtn onClick={submitInviteCode} />
+    </J.Container>
   );
 }
 
