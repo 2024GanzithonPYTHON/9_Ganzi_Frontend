@@ -6,8 +6,20 @@ import axios from 'axios';
 export function OurTasks() {
   const [currentDate, setCurrentDate] = useState(''); // 현재 날짜
   const [completedTasks, setCompletedTasks] = useState([]); // 완료된 할일 저장
-
+  const [nickname, setNickname] = useState(''); // 닉네임 가져오기
   const navigate = useNavigate(); // 페이지 이동 함수
+
+  // 프로필 정보 로드
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('nickname');
+
+    if (!storedNickname) {
+      alert('프로필 정보를 가져오지 못했습니다. 다시 로그인해주세요.');
+      navigate('/register');
+    } else {
+      setNickname(storedNickname);
+    }
+  }, [navigate]);
 
   // 할일 데이터 상태
   const [tasks, setTasks] = useState({
@@ -35,6 +47,7 @@ export function OurTasks() {
       const token = localStorage.getItem('Authorization'); // Bearer 토큰 가져오기
       if (!token) {
         alert('로그인 토큰이 없습니다. 다시 로그인해주세요.');
+        navigate('/login'); // 로그인 페이지로 이동
         return;
       }
 
@@ -42,7 +55,7 @@ export function OurTasks() {
         'https://ganzithon.hyunwoo9930.store/todo/both',
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: ` ${token}`,
           },
         }
       );
@@ -50,18 +63,28 @@ export function OurTasks() {
       const data = response.data; // API로부터 가져온 데이터
       console.log('가져온 데이터:', data);
 
-      // 가져온 데이터를 상태로 업데이트
+      // 오전(00:00 ~ 11:59)과 오후(12:00 ~ 23:59)로 분류
+      const morningTasks = data.filter((task) => {
+        const taskHour = new Date(task.time).getHours(); // `time`에서 시간(HH)을 추출
+        return taskHour >= 0 && taskHour < 12; // 오전
+      });
+
+      const afternoonTasks = data.filter((task) => {
+        const taskHour = new Date(task.time).getHours(); // `time`에서 시간(HH)을 추출
+        return taskHour >= 12 && taskHour <= 23; // 오후
+      });
+
+      // 상태 업데이트
       setTasks({
-        morning: data.morning || [],
-        afternoon: data.afternoon || [],
-        userAdded: data.userAdded || [],
+        morning: morningTasks,
+        afternoon: afternoonTasks,
+        userAdded: [], // 사용자 추가 데이터 처리
       });
     } catch (error) {
       console.error('할일 데이터 가져오기 실패:', error);
       alert('할일 데이터를 불러오는데 실패했습니다.');
     }
   };
-
   // 새 할일 추가
   const addTask = async () => {
     if (newTask.trim() === '') {
@@ -78,8 +101,8 @@ export function OurTasks() {
 
       const requestBody = {
         content: newTask,
-        time: 'afternoon', // 예: 'morning' 또는 'afternoon'
-        responsibility: 'shared', // 예: 'shared' 또는 특정 사용자
+        time: new Date().toISOString(), // 현재 시간 (예: 오후 할일에 추가하려면 수정 가능)
+        responsibility: 'BOTH', // 기본 책임자 설정
       };
 
       const response = await axios.post(
@@ -87,14 +110,22 @@ export function OurTasks() {
         requestBody,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         }
       );
 
-      setTasks((prev) => [...prev, response.data]); // 새 할일 추가
-      setNewTask(''); // 입력 필드 초기화
+      if (response.data === 'success') {
+        // 새로운 할일을 userAdded 배열에 추가
+        setTasks((prev) => ({
+          ...prev,
+          userAdded: [...prev.userAdded, requestBody],
+        }));
+        setNewTask(''); // 입력 필드 초기화
+      } else {
+        alert('할일 추가에 실패했습니다.');
+      }
     } catch (error) {
       console.error('할일 추가에 실패했습니다:', error);
       alert('할일 추가에 실패했습니다.');
@@ -158,155 +189,166 @@ export function OurTasks() {
       {/* 오전 할일 섹션 */}
       <T.Section>
         <T.SectionTitle>오전</T.SectionTitle>
-        {tasks.morning.map((task, index) => (
-          <T.TaskItem key={`morning-${index}`}>
-            {/* 수정 모드일 경우 Pen.svg, 아닐 경우 OnPeople.svg */}
-            <T.TaskIcon
-              src={isEditMode ? '/images/Pen.svg' : '/images/OnPeople.svg'}
-              alt={isEditMode ? '수정' : '아이콘'}
-              onClick={() => {
-                if (isEditMode) setEditingTask(`morning-${index}`);
-              }}
-            />
-            <div style={{ flex: 1 }}>
-              <T.Ment>같이해요</T.Ment>
-              {/* 수정 모드일 경우 TaskInput 표시, 그렇지 않으면 TaskText */}
-              {editingTask === `morning-${index}` ? (
-                <T.TaskInput
-                  defaultValue={task}
-                  onBlur={(e) => saveTaskEdit('morning', index, e.target.value)}
-                  autoFocus
+        {tasks.morning.length > 0 ? (
+          tasks.morning.map((task) => (
+            <T.TaskItem key={task.id}>
+              {/* 수정 모드일 경우 Pen.svg, 아닐 경우 OnPeople.svg */}
+              <T.TaskIcon
+                src={isEditMode ? '/images/Pen.svg' : '/images/OnPeople.svg'}
+                alt={isEditMode ? '수정' : '아이콘'}
+                onClick={() => {
+                  if (isEditMode) setEditingTask(task.id);
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <T.Ment>같이해요</T.Ment>
+                {/* 수정 모드일 경우 TaskInput 표시, 그렇지 않으면 TaskText */}
+                {editingTask === task.id ? (
+                  <T.TaskInput
+                    defaultValue={task}
+                    onBlur={(e) =>
+                      saveTaskEdit('morning', task.id, e.target.value)
+                    }
+                    autoFocus
+                  />
+                ) : (
+                  <T.TaskText>{task.content}</T.TaskText>
+                )}
+              </div>
+              {/* 수정 모드일 경우 Trash.svg, 아닐 경우 체크박스 */}
+              {isEditMode ? (
+                <T.TaskIcon
+                  src="/images/Trash.svg"
+                  alt="삭제"
+                  onClick={() => deleteTask('morning', task.id)}
                 />
               ) : (
-                <T.TaskText>{task}</T.TaskText>
+                <T.CheckBox
+                  src={
+                    completedTasks.includes(task.id)
+                      ? '/images/OnToDoCheck.svg'
+                      : '/images/ToDoCheck.svg'
+                  }
+                  onClick={() => handleCheck(task.id)}
+                />
               )}
-            </div>
-            {/* 수정 모드일 경우 Trash.svg, 아닐 경우 체크박스 */}
-            {isEditMode ? (
-              <T.TaskIcon
-                src="/images/Trash.svg"
-                alt="삭제"
-                onClick={() => deleteTask('morning', index)}
-              />
-            ) : (
-              <T.CheckBox
-                src={
-                  completedTasks.includes(`morning-${index}`)
-                    ? '/images/OnToDoCheck.svg'
-                    : '/images/ToDoCheck.svg'
-                }
-                onClick={() => handleCheck(`morning-${index}`)}
-              />
-            )}
-          </T.TaskItem>
-        ))}
+            </T.TaskItem>
+          ))
+        ) : (
+          <></>
+        )}
       </T.Section>
 
       {/* 오후 할일 섹션 */}
       <T.Section>
         <T.SectionTitle>오후</T.SectionTitle>
-        {tasks.afternoon.map((task, index) => (
-          <T.TaskItem key={`afternoon-${index}`}>
-            {/* 수정 모드일 경우 Pen.svg, 아닐 경우 OnPeople.svg */}
-            <T.TaskIcon
-              src={isEditMode ? '/images/Pen.svg' : '/images/OnPeople.svg'}
-              alt={isEditMode ? '수정' : '아이콘'}
-              onClick={() => {
-                if (isEditMode) setEditingTask(`afternoon-${index}`);
-              }}
-            />
-            <div style={{ flex: 1 }}>
-              <T.Ment>같이해요</T.Ment>
-              {/* 수정 모드일 경우 TaskInput 표시, 그렇지 않으면 TaskText */}
-              {editingTask === `afternoon-${index}` ? (
-                <T.TaskInput
-                  defaultValue={task}
-                  onBlur={(e) =>
-                    saveTaskEdit('afternoon', index, e.target.value)
-                  }
-                  autoFocus
-                />
-              ) : (
-                <T.TaskText>{task}</T.TaskText>
-              )}
-            </div>
-            {/* 수정 모드일 경우 Trash.svg, 아닐 경우 체크박스 */}
-            {isEditMode ? (
-              <T.TaskIcon
-                src="/images/Trash.svg"
-                alt="삭제"
-                onClick={() => deleteTask('afternoon', index)}
-              />
-            ) : (
-              <T.CheckBox
-                src={
-                  completedTasks.includes(`afternoon-${index}`)
-                    ? '/images/OnToDoCheck.svg'
-                    : '/images/ToDoCheck.svg'
-                }
-                onClick={() => handleCheck(`afternoon-${index}`)}
-              />
-            )}
-          </T.TaskItem>
-        ))}
-      </T.Section>
-
-      {/* 사용자 추가 항목 섹션 */}
-      {isEditMode || tasks.userAdded.length > 0 ? (
-        <T.Section>
-          <T.SectionTitle>홍길동님이 추가한 우리의 할일</T.SectionTitle>
-          {tasks.userAdded.map((task, index) => (
-            <T.TaskItem key={`userAdded-${index}`}>
+        {tasks.afternoon.length > 0 ? (
+          tasks.afternoon.map((task) => (
+            <T.TaskItem key={task.id}>
               <T.TaskIcon
                 src={isEditMode ? '/images/Pen.svg' : '/images/OnPeople.svg'}
                 alt={isEditMode ? '수정' : '아이콘'}
                 onClick={() => {
-                  if (isEditMode) setEditingTask(`userAdded-${index}`);
+                  if (isEditMode) setEditingTask(task.id);
                 }}
               />
               <div style={{ flex: 1 }}>
-                <T.Ment>직접 추가했어요</T.Ment>
-                <T.TaskText>{task}</T.TaskText>
+                <T.Ment>같이해요</T.Ment>
+                {editingTask === task.id ? (
+                  <T.TaskInput
+                    defaultValue={task.content}
+                    onBlur={(e) =>
+                      saveTaskEdit('afternoon', task.id, e.target.value)
+                    }
+                    autoFocus
+                  />
+                ) : (
+                  <T.TaskText>{task.content}</T.TaskText>
+                )}
               </div>
               {isEditMode ? (
                 <T.TaskIcon
                   src="/images/Trash.svg"
                   alt="삭제"
-                  onClick={() => deleteTask('userAdded', index)}
+                  onClick={() => deleteTask('afternoon', task.id)}
                 />
               ) : (
                 <T.CheckBox
                   src={
-                    completedTasks.includes(`userAdded-${index}`)
+                    completedTasks.includes(task.id)
                       ? '/images/OnToDoCheck.svg'
                       : '/images/ToDoCheck.svg'
                   }
-                  onClick={() => handleCheck(`userAdded-${index}`)}
+                  onClick={() => handleCheck(task.id)}
                 />
               )}
             </T.TaskItem>
-          ))}
+          ))
+        ) : (
+          <></>
+        )}
+      </T.Section>
 
-          {/* 새 할일 추가 */}
-          {isEditMode && (
-            <T.TaskItem>
-              <T.TaskIcon
-                src="/images/AddBox.svg"
-                alt="추가"
-                onClick={addTask}
-              />
-              <div style={{ flex: 1 }}>
-                <T.Ment>우리의 집안일, 여기에 추가하고 관리해요!</T.Ment>
+      {/* 사용자 추가 항목 섹션 */}
+      <T.Section>
+        <T.SectionTitle>{nickname}님이 추가한 우리의 할일</T.SectionTitle>
+        {tasks.userAdded.map((task, index) => (
+          <T.TaskItem key={`userAdded-${index}`}>
+            <T.TaskIcon
+              src={isEditMode ? '/images/Pen.svg' : '/images/OnPeople.svg'}
+              alt={isEditMode ? '수정' : '아이콘'}
+              onClick={() => {
+                if (isEditMode) setEditingTask(`userAdded-${index}`);
+              }}
+            />
+            <div style={{ flex: 1 }}>
+              <T.Ment>직접 추가했어요</T.Ment>
+              {editingTask === `userAdded-${index}` ? (
                 <T.TaskInput
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                  placeholder="집안일 추가하기"
+                  defaultValue={task.content}
+                  onBlur={(e) =>
+                    saveTaskEdit('userAdded', index, e.target.value)
+                  }
+                  autoFocus
                 />
-              </div>
-            </T.TaskItem>
-          )}
-        </T.Section>
-      ) : null}
+              ) : (
+                <T.TaskText>{task.content}</T.TaskText>
+              )}
+            </div>
+            {isEditMode ? (
+              <T.TaskIcon
+                src="/images/Trash.svg"
+                alt="삭제"
+                onClick={() => deleteTask('userAdded', index)}
+              />
+            ) : (
+              <T.CheckBox
+                src={
+                  completedTasks.includes(`userAdded-${index}`)
+                    ? '/images/OnToDoCheck.svg'
+                    : '/images/ToDoCheck.svg'
+                }
+                onClick={() => handleCheck(`userAdded-${index}`)}
+              />
+            )}
+          </T.TaskItem>
+        ))}
+
+        {/* 새 할일 추가 */}
+        {isEditMode && (
+          <T.TaskItem>
+            <T.TaskIcon src="/images/AddBox.svg" alt="추가" onClick={addTask} />
+            <div style={{ flex: 1 }}>
+              <T.Ment>우리의 집안일, 여기에 추가하고 관리해요!</T.Ment>
+              <T.TaskInput
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                placeholder="새로운 할일 입력"
+              />
+            </div>
+          </T.TaskItem>
+        )}
+      </T.Section>
 
       {/* 페이지 하단 푸터 */}
       <T.FooterBackground />

@@ -28,8 +28,8 @@ export function Loading() {
       // 요청 성공 시 데이터 확인 (콘솔 출력)
       console.log('API 응답 데이터:', response.data);
 
-      // // 페이지 이동 (ourtodo로)
-      // navigate('/ourtodo');
+      // 페이지 이동 (ourtodo로)
+      navigate('/ourtodo');
     } catch (error) {
       // 에러 처리
       console.error('API 요청 중 에러 발생:', error);
