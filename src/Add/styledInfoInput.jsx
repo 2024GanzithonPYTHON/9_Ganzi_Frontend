@@ -67,6 +67,7 @@ export const SubText = styled.p`
 
 // 출퇴근 카드
 export const WorkCard = styled.div`
+  font-family: 'Pretendard Variable';
   width: 311px;
   height: 73px;
   background: #fff;
@@ -93,6 +94,7 @@ export const CardContainer = styled.div`
 
 // 저장된 WorkCard 스타일
 export const WorkCardSaved = styled.div`
+  font-family: 'Pretendard Variable';
   width: 311px;
   height: 73px;
   background: #ffffff;
@@ -118,6 +120,7 @@ export const WorkCardSaved = styled.div`
 
 // 저장된 텍스트 스타일
 export const SavedText = styled.span`
+  font-family: 'Pretendard Variable';
   font-size: 16px;
   font-weight: 500;
   color: #8f34ff;
@@ -133,6 +136,7 @@ export const CheckIcon = styled.img`
 
 // 아이 카드
 export const ChildCard = styled.div`
+  font-family: 'Pretendard Variable';
   width: 140px;
   height: 45px;
   background: #fff;
@@ -154,6 +158,7 @@ export const Icon = styled.img`
 `;
 
 export const CardText = styled.span`
+  font-family: 'Pretendard Variable';
   font-size: 16px;
   color: #9ea2b0;
   flex: 1;
@@ -178,6 +183,7 @@ export const FlexRow = styled.div`
 
 // 하단 버튼
 export const BottomButton = styled.button`
+  font-family: 'Pretendard Variable';
   position: absolute;
   width: 334px;
   height: 57px;
@@ -206,7 +212,7 @@ export const BottomButton = styled.button`
 export const AdditionalText = styled.p`
   margin-top: 33px;
   color: #9ea2b0;
-  font-family: Pretendard;
+  font-family: 'Pretendard Variable';
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
