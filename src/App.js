@@ -14,6 +14,10 @@ import Register from "./account/Register";
 import RedirectHandler from "./account/RedirectHandler";
 import Schedule from "./account/Schedule";
 import Contribution from "./contribution/Contribution";
+import Land1 from "./landing/Land1";
+import Land2 from "./landing/Land2";
+import Land3 from "./landing/Land3";
+import Land4 from "./landing/Land4";
 
 function App() {
   return (
@@ -34,6 +38,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<RedirectHandler />} />
         <Route path="/schedule" element={<Schedule />} />
+        <Route path="/land1" element={<Land1 />} />
+        <Route path="/land2" element={<Land2 />} />
+        <Route path="/land3" element={<Land3 />} />
+        <Route path="/land4" element={<Land4 />} />
       </Routes>
     </BrowserRouter>
   );
