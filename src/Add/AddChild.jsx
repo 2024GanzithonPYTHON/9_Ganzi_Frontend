@@ -3,8 +3,12 @@ import * as CD from './styledAddChild';
 import * as WD from './styledWorkDetail';
 
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function AddChild() {
+  const [nickname, setNickname] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+
   const [childNickname, setChildNickname] = useState(''); // 아이 별명
   const [institution, setInstitution] = useState(''); // 등하원 기관
   const [customInstitution, setCustomInstitution] = useState(''); // 사용자 입력 기관
@@ -16,6 +20,27 @@ export default function AddChild() {
   const [endSchool, setEndSchool] = useState(''); // 하원 시간
 
   const navigate = useNavigate();
+
+  // localStorage에서 닉네임과 프로필 이미지 가져오기
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('nickname');
+    const storedProfileImage = localStorage.getItem('profileImage');
+
+    if (!storedNickname || !storedProfileImage) {
+      console.error(
+        'Profile information is missing. Redirecting to login page...'
+      );
+      alert('프로필 정보를 가져오지 못했습니다. 다시 로그인해주세요.');
+      navigate('/register'); // 로그인 페이지로 리다이렉트
+    } else {
+      setNickname(storedNickname);
+      setProfileImage(storedProfileImage);
+      console.log('Profile loaded:', {
+        nickname: storedNickname,
+        image: storedProfileImage,
+      });
+    }
+  }, [navigate]);
 
   // 등하원 기관 선택
   const handleInstitution = (newInstitution) => {
@@ -59,14 +84,99 @@ export default function AddChild() {
     }
   };
 
+  const handleSaveChild = async () => {
+    if (
+      !childNickname ||
+      !institution ||
+      selectedDays.length === 0 ||
+      !startSchool ||
+      !endSchool
+    ) {
+      alert('모든 필수 정보를 입력해주세요.');
+      return;
+    }
+
+    // 요일 변환 (예: 월 -> MONDAY)
+    const dayOfWeekMap = {
+      월: 'MONDAY',
+      화: 'TUESDAY',
+      수: 'WEDNESDAY',
+      목: 'THURSDAY',
+      금: 'FRIDAY',
+      토: 'SATURDAY',
+      일: 'SUNDAY',
+    };
+    const dayOfWeek = selectedDays.map((day) => dayOfWeekMap[day]);
+
+    // 기관 변환 (예: 어린이집 -> KINDERGARTEN)
+    const institutionMap = {
+      어린이집: 'KINDERGARTEN',
+      유치원: 'KINDERGARTEN',
+      초등학교: 'PRIMARYSCHOOL',
+      중학교: 'MIDDLESCHOOL',
+      고등학교: 'HIGHSCHOOL',
+      대학교: 'UNIVERSITY',
+    };
+    const englishInstitution = institutionMap[institution] || institution;
+
+    // 시간 변환 (HH:mm -> HH:mm:ss)
+    const formatTime = (time) => (time.length === 5 ? `${time}:00` : time);
+
+    const childData = [
+      {
+        nickname: childNickname,
+        institution: englishInstitution,
+        dayOfWeek: dayOfWeek, // 배열로 전송
+        // dayOfWeek: dayOfWeek.join(','), // 문자열로 전송할 경우
+        startTime: formatTime(startSchool),
+        endTime: formatTime(endSchool),
+      },
+    ];
+
+    console.log('전송 데이터:', childData);
+
+    try {
+      const token = localStorage.getItem('Authorization');
+      if (!token) {
+        alert('로그인 토큰이 없습니다. 다시 로그인해주세요.');
+        return;
+      }
+
+      const response = await axios.post(
+        'https://ganzithon.hyunwoo9930.store/child/create',
+        childData,
+        {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('아이 정보 저장 성공:', response.data);
+
+      // localStorage에 자녀 닉네임 저장
+      localStorage.setItem('childNickname', response.data[0].nickname);
+
+      navigate('/infoinput');
+    } catch (error) {
+      console.error('아이 정보 저장 실패:', error);
+
+      if (error.response && error.response.data) {
+        alert(`저장 실패: ${error.response.data.message}`);
+      } else {
+        alert('저장 실패: 네트워크 오류');
+      }
+    }
+  };
+
   return (
-    <CD.Container>
-      {/* 프로필: 추후 닉네임 변수화 필요 */}
+    <CD.Container style={{ height: '1051px' }}>
       <WD.ProfileSection>
         <WD.ProfileImg>
-          <img src="/images/ProfileImg.svg" alt="프로필 이미지" />
+          <img src={profileImage} alt={`${nickname}'s profile`} />
         </WD.ProfileImg>
-        <WD.Nickname>홍길동</WD.Nickname>
+        <WD.Nickname>{nickname}</WD.Nickname>
       </WD.ProfileSection>
       <WD.InfoText>
         <span>우리 </span>
@@ -188,7 +298,7 @@ export default function AddChild() {
         </CD.TimeInputContainer>
       </CD.TimeContainer>
       {/* 하단 버튼 */}
-      <WD.OkButton onClick={() => navigate('/infoinput')}>확인</WD.OkButton>
+      <WD.OkButton onClick={handleSaveChild}>확인</WD.OkButton>
     </CD.Container>
   );
 }

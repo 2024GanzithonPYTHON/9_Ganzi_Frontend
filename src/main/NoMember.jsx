@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import * as N from './styledNoMember';
+import { useNavigate } from 'react-router-dom';
 
 export function NoMember() {
   const [currentDate, setCurrentDate] = useState(''); // 현재 날짜
   const [isOurTodo, setIsOurTodo] = useState(true); // 현재 탭 상태 (우리/나)
+  const navigate = useNavigate();
 
   // 오늘 날짜 가져오기
   useEffect(() => {
@@ -55,7 +57,9 @@ export function NoMember() {
       </N.InviteMessage2>
 
       {/* 멤버 초대/참여 버튼 */}
-      <N.InviteButton>집콕콕 멤버초대 / 집콕콕 참여</N.InviteButton>
+      <N.InviteButton onClick={() => navigate('/addmember')}>
+        집콕콕 멤버초대 / 집콕콕 참여
+      </N.InviteButton>
 
       {/* 페이지 하단 푸터 */}
       {/* 푸터 배경 */}

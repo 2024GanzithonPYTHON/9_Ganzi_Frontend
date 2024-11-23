@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import * as W from "./styledReady";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as W from './styledReady';
 
 export function Ready() {
   const navigate = useNavigate();

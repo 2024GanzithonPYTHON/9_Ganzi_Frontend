@@ -1,24 +1,58 @@
 import React, { useState, useEffect } from 'react'; // useState 추가
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as T from './styledInfoInput';
+import axios from 'axios';
 
-export default function InfoInput() {
+export function InfoInput() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [nickname, setNickname] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+  const [childNickname, setChildNickname] = useState(null); // 자녀 닉네임 상태
+
+  // localStorage에서 닉네임과 프로필 이미지 가져오기
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('nickname');
+    const storedProfileImage = localStorage.getItem('profileImage');
+    const storedChildNickname = localStorage.getItem('childNickname'); // 자녀 닉네임 가져오기
+
+    if (!storedNickname || !storedProfileImage) {
+      console.error(
+        'Profile information is missing. Redirecting to login page...'
+      );
+      alert('프로필 정보를 가져오지 못했습니다. 다시 로그인해주세요.');
+      navigate('/register'); // 로그인 페이지로 리다이렉트
+    } else {
+      setNickname(storedNickname);
+      setProfileImage(storedProfileImage);
+      console.log('Profile loaded:', {
+        nickname: storedNickname,
+        image: storedProfileImage,
+      });
+    }
+  }, [navigate]);
 
   // 직장 추가 상태 관리
   const [isWorkSaved, setIsWorkSaved] = useState(false); // 직장 정보 저장 여부
+  const [childData, setChildData] = useState(null); // 자녀 정보 상태
   const [savedPets, setSavedPets] = useState([]); // 저장된 반려동물 정보
 
-  // location.state가 있으면 상태를 업데이트
+  // 직장 정보 상태 업데이트
   useEffect(() => {
     if (location.state?.workData) {
       setIsWorkSaved(true); // 직장 정보가 저장되었음을 표시
     }
   }, [location.state]);
 
-  // 페이지로 전달된 반려동물 데이터 처리
+  // 자녀 정보 업데이트
+  useEffect(() => {
+    console.log('전달받은 데이터:', location.state?.childData); // 데이터 수신 확인
+    if (location.state?.childData) {
+      setChildData(location.state.childData);
+    }
+  }, [location.state]);
+
+  // 반려동물 정보 업데이트
   useEffect(() => {
     if (location.state?.petData) {
       setSavedPets((prev) => [...prev, location.state.petData]);
@@ -32,9 +66,11 @@ export default function InfoInput() {
 
       {/* 프로필 섹션 */}
       <T.ProfileSection>
-        <T.ProfileImage />
+        <T.ProfileImg>
+          <img src={profileImage} alt={`${nickname}'s profile`} />
+        </T.ProfileImg>
         <div style={{ marginRight: '20px' }}>
-          <T.UserName>홍길동</T.UserName>
+          <T.UserName>{nickname}</T.UserName>
           <T.SubText>
             집콕콕을 더욱 똑똑하게! <br />
             간단한 정보를 입력해주세요
@@ -68,10 +104,20 @@ export default function InfoInput() {
       <T.CardContainer>
         {/* 자녀 추가 섹션 */}
         <T.FlexRow>
-          <T.ChildCard onClick={() => navigate('/addchild')} hoverable>
+          <T.ChildCard
+            onClick={() => navigate('/addchild')}
+            hoverable
+            style={{
+              color: childData ? 'purple' : 'gray',
+              borderColor: childData ? 'purple' : 'gray',
+            }}
+          >
             <T.Icon src="/images/ChildIcon.svg" alt="자녀 아이콘" />
-            <T.CardText>자녀</T.CardText>
-            <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
+            <T.CardText>{childData ? childData.nickname : '자녀'}</T.CardText>
+            <T.PlusIcon
+              src={childData ? '/images/Addcheck.svg' : '/images/IIPlus.svg'}
+              alt="자녀 아이콘"
+            />
           </T.ChildCard>
 
           {/* 반려동물 추가 섹션 */}
@@ -114,3 +160,4 @@ export default function InfoInput() {
     </T.PageContainer>
   );
 }
+export default InfoInput;

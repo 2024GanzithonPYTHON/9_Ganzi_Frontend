@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as CD from './styledAddChild';
 import * as WD from './styledWorkDetail';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function AddPet() {
   const [species, setSpecies] = useState(''); // 반려동물 종
@@ -20,30 +21,48 @@ export default function AddPet() {
       return;
     }
 
-    const petData = {
-      type: species, // 반려동물 종
-      nickname: petNickname, // 반려동물 별명
-    };
+    const petData = [
+      // 400 에러 이유: petData를 array가 아니라 object로 보냈었기 때문.
+      {
+        nickname: petNickname,
+        type: species,
+      },
+    ];
+    console.log('전송 데이터:', petData); // 데이터를 확인
 
     try {
-      const response = await fetch(
+      const token = localStorage.getItem('Authorization'); // 토큰 가져오기
+      console.log('토큰:', token); // 토큰 값 확인
+      if (!token) {
+        alert('로그인 토큰이 없습니다. 다시 로그인해주세요.');
+        return;
+      }
+
+      // 서버에 저장 요청
+      const response = await axios.post(
         'https://ganzithon.hyunwoo9930.store/pet/create',
+        petData,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(petData),
+          headers: {
+            Authorization: `${token}`, // Bearer 토큰을 헤더에 포함해서 Register.jsx에서 token에 저장했음 -> Bearer `{token}`을 쓰면 401 에러남...
+            'Content-Type': 'application/json',
+          },
         }
       );
 
-      if (response.ok) {
-        const savedPet = await response.json();
-        navigate('/infoinput', { state: { petData: savedPet } }); // 저장된 데이터를 전달하며 이동
-      } else {
-        const error = await response.json();
-        alert(`저장 실패: ${error.message || '서버 오류'}`);
-      }
+      console.log('반려동물 저장 성공:', response.data);
+
+      // InfoInput 페이지로 저장된 데이터를 전달하며 이동
+      navigate('/infoinput', { state: { petData: response.data } });
     } catch (error) {
-      alert(`저장 실패: ${error.message || '네트워크 오류'}`);
+      console.error('반려동물 저장 실패:', error);
+
+      // 400 에러일 경우, 서버에서 전달한 에러 메시지 표시
+      if (error.response && error.response.data) {
+        alert(`저장 실패: ${error.response.data.message}`);
+      } else {
+        alert('저장 실패: 네트워크 오류');
+      }
     }
   };
 

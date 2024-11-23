@@ -2,16 +2,16 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Nickname from './account/Nickname';
 import Gender from './account/Gender';
-import WorkDetail from './account/Add/WorkDetail';
-import ChildDetail from './account/Add/ChildDetail';
+import WorkDetail from './Add/WorkDetail';
+import ChildDetail from './Add/ChildDetail';
 import { Child } from './account/Child';
 import { Housework } from './account/Housework';
 import OurToDo from './main/OurToDo';
 import MyToDo from './main/MyToDo';
-import AddChild from './account/Add/AddChild';
-import AddPet from './account/Add/AddPet';
+import AddChild from './Add/AddChild';
+import AddPet from './Add/AddPet';
 
-import InfoInput from './account/Add/InfoInput';
+import InfoInput from './Add/InfoInput';
 import Welcome from './account/Welcome';
 import Housework2 from './account/Housework2';
 import Housework3 from './account/Housework3';
@@ -23,6 +23,9 @@ import Contribution from './account/Contribution';
 import Register from './account/Register';
 import RedirectHandler from './account/RedirectHandler';
 import Schedule from './account/Schedule';
+import NoMember from './main/NoMember';
+
+import Loading from './main/Loading';
 
 function App() {
   return (
@@ -51,6 +54,8 @@ function App() {
         <Route path="/infoinput" element={<InfoInput />} />
         <Route path="/addchild" element={<AddChild />} />
         <Route path="/addpet" element={<AddPet />} />
+        <Route path="/main" element={<NoMember />} />
+        <Route path="/loading" element={<Loading />} />
       </Routes>
     </BrowserRouter>
   );

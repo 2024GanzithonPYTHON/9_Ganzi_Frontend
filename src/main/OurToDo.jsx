@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as T from './styledOurToDo'; // styled-components 불러오기
 import { useNavigate } from 'react-router-dom'; // 페이지 이동
+import axios from 'axios';
 
 export function OurTasks() {
   const [currentDate, setCurrentDate] = useState(''); // 현재 날짜
@@ -8,16 +9,11 @@ export function OurTasks() {
 
   const navigate = useNavigate(); // 페이지 이동 함수
 
+  // 할일 데이터 상태
   const [tasks, setTasks] = useState({
-    // 할일 데이터 상태
-    morning: ['길동이 등교 준비'], // 오전 할일
-    afternoon: [
-      // 오후 할일
-      '저녁 준비 및 길동이 저녁 식사 챙기기',
-      '식사 후 주방 정리 및 설거지',
-      '동이 산책',
-    ],
-    userAdded: [], // 사용자 추가 할일
+    morning: [],
+    afternoon: [],
+    userAdded: [],
   });
 
   const [isEditMode, setIsEditMode] = useState(false); // 수정 모드 상태
@@ -33,21 +29,88 @@ export function OurTasks() {
     setCurrentDate(formattedDate);
   }, []);
 
+  // API 데이터 가져오기
+  const fetchTasks = async () => {
+    try {
+      const token = localStorage.getItem('Authorization'); // Bearer 토큰 가져오기
+      if (!token) {
+        alert('로그인 토큰이 없습니다. 다시 로그인해주세요.');
+        return;
+      }
+
+      const response = await axios.get(
+        'https://ganzithon.hyunwoo9930.store/todo/both',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = response.data; // API로부터 가져온 데이터
+      console.log('가져온 데이터:', data);
+
+      // 가져온 데이터를 상태로 업데이트
+      setTasks({
+        morning: data.morning || [],
+        afternoon: data.afternoon || [],
+        userAdded: data.userAdded || [],
+      });
+    } catch (error) {
+      console.error('할일 데이터 가져오기 실패:', error);
+      alert('할일 데이터를 불러오는데 실패했습니다.');
+    }
+  };
+
+  // 새 할일 추가
+  const addTask = async () => {
+    if (newTask.trim() === '') {
+      alert('할일 내용을 입력해주세요.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('Authorization');
+      if (!token) {
+        alert('로그인 토큰이 없습니다. 다시 로그인해주세요.');
+        return;
+      }
+
+      const requestBody = {
+        content: newTask,
+        time: 'afternoon', // 예: 'morning' 또는 'afternoon'
+        responsibility: 'shared', // 예: 'shared' 또는 특정 사용자
+      };
+
+      const response = await axios.post(
+        'https://ganzithon.hyunwoo9930.store/todo/create',
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      setTasks((prev) => [...prev, response.data]); // 새 할일 추가
+      setNewTask(''); // 입력 필드 초기화
+    } catch (error) {
+      console.error('할일 추가에 실패했습니다:', error);
+      alert('할일 추가에 실패했습니다.');
+    }
+  };
+
+  // 페이지 로드 시 API 데이터 가져오기
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
   // 완료된 할일 체크
   const handleCheck = (id) => {
     setCompletedTasks((prev) =>
       prev.includes(id) ? prev.filter((taskId) => taskId !== id) : [...prev, id]
     );
-  };
-
-  // 새 할일 추가
-  const addTask = () => {
-    if (newTask.trim() === '') return; // 빈 값 방지
-    setTasks((prev) => ({
-      ...prev,
-      userAdded: [...prev.userAdded, newTask], // 사용자 추가 항목에 새 항목 추가
-    }));
-    setNewTask(''); // 입력 필드 초기화
   };
 
   // 할일 삭제

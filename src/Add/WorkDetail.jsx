@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export function WorkDetail() {
+  const [nickname, setNickname] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+
   const [isScheduleFixed, setIsScheduleFixed] = useState(null); // 출퇴근 일정함 / 일정하지 않음
   const [selectedDays, setSelectedDays] = useState([]); // 요일 선택
   const [allDaysSelected, setAllDaysSelected] = useState(false); // 매일 선택
@@ -12,6 +15,27 @@ export function WorkDetail() {
   const [endWork, setEndWork] = useState(''); // 퇴근 시간
 
   const navigate = useNavigate();
+
+  // localStorage에서 닉네임과 프로필 이미지 가져오기
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('nickname');
+    const storedProfileImage = localStorage.getItem('profileImage');
+
+    if (!storedNickname || !storedProfileImage) {
+      console.error(
+        'Profile information is missing. Redirecting to login page...'
+      );
+      alert('프로필 정보를 가져오지 못했습니다. 다시 로그인해주세요.');
+      navigate('/register'); // 로그인 페이지로 리다이렉트
+    } else {
+      setNickname(storedNickname);
+      setProfileImage(storedProfileImage);
+      console.log('Profile loaded:', {
+        nickname: storedNickname,
+        image: storedProfileImage,
+      });
+    }
+  }, [navigate]);
 
   const handleSave = () => {
     const workData = {
@@ -55,12 +79,11 @@ export function WorkDetail() {
 
   return (
     <WD.Container>
-      {/* 프로필: 추후 닉네임 변수화 필요 */}
       <WD.ProfileSection>
         <WD.ProfileImg>
-          <img src="/images/ProfileImg.svg" alt="프로필 이미지" />
+          <img src={profileImage} alt={`${nickname}'s profile`} />
         </WD.ProfileImg>
-        <WD.Nickname>홍길동</WD.Nickname>
+        <WD.Nickname>{nickname}</WD.Nickname>
       </WD.ProfileSection>
       <WD.InfoText>
         <WD.HighlightText>직장 생활</WD.HighlightText>

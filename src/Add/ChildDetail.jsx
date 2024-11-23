@@ -1,7 +1,13 @@
+// 폐기할 페이지
 import React, { useState, useEffect } from 'react';
 import * as CD from './styledChildDetail';
 
+import { useNavigate } from 'react-router-dom';
+
 export function ChildDetail() {
+  const [nickname, setNickname] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+
   const [childNickname, setChildNickname] = useState(''); // 아이 별명
 
   const [institution, setInstitution] = useState(''); //등하원 기관
@@ -14,6 +20,29 @@ export function ChildDetail() {
 
   const [species, setSpecies] = useState(''); // 반려동물 종
   const [petNickname, setPetNickname] = useState(''); // 반려동물 별명
+
+  const navigate = useNavigate();
+
+  // localStorage에서 닉네임과 프로필 이미지 가져오기
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('nickname');
+    const storedProfileImage = localStorage.getItem('profileImage');
+
+    if (!storedNickname || !storedProfileImage) {
+      console.error(
+        'Profile information is missing. Redirecting to login page...'
+      );
+      alert('프로필 정보를 가져오지 못했습니다. 다시 로그인해주세요.');
+      navigate('/register'); // 로그인 페이지로 리다이렉트
+    } else {
+      setNickname(storedNickname);
+      setProfileImage(storedProfileImage);
+      console.log('Profile loaded:', {
+        nickname: storedNickname,
+        image: storedProfileImage,
+      });
+    }
+  }, [navigate]);
 
   // 등하원 기관 선택
   const handleInstitution = (newInstitution) => {

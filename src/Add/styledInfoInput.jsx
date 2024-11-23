@@ -38,12 +38,18 @@ export const ProfileSection = styled.div`
 `;
 
 // 프로필 이미지
-export const ProfileImage = styled.div`
+export const ProfileImg = styled.div`
   width: 120px;
   height: 120px;
-  background-color: #efefef;
-  border-radius: 50%;
-  margin: 0 20px 16px 9px;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+
+  img {
+    width: 100%; /* 부모의 너비에 맞춤 */
+    height: 100%; /* 부모의 높이에 맞춤 */
+    object-fit: cover; /* 이미지 비율 유지하면서 영역 채움 */
+    border-radius: 50%; /* 원형으로 만들기 (선택사항) */
+  }
 `;
 
 export const UserName = styled.h1`

@@ -1,3 +1,5 @@
+// 로그인 토큰 저장 페이지
+
 import React, { useEffect } from 'react';
 
 export function RedirectHandler() {
