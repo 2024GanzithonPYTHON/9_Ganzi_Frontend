@@ -11,43 +11,45 @@ export function Join() {
   };
 
   const submitInviteCode = async () => {
-    const token = localStorage.getItem("Authorization"); // 토큰 가져오기
+    const token = localStorage.getItem("Authorization");
 
     if (!token) {
       alert("로그인이 필요합니다.");
-      navigate("/register"); // 로그인 페이지로 이동
+      navigate("/register");
       return;
     }
 
     try {
-      const response = await fetch("/team/match", {
-        method: "POST",
+      console.log("Authorization Header:", token);
+      console.log("Request Body:", inviteCode);
+
+      const response = await fetch("/team", {
+        method: "PATCH",
         headers: {
           Authorization: `${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "text/plain",
         },
-        body: JSON.stringify({
-          inviteCode, // 입력한 초대 코드 전송
-        }),
+        body: inviteCode.trim(), // 공백 제거 후 전송
       });
+
+      console.log("Response Status:", response.status);
 
       if (!response.ok) {
         if (response.status === 404) {
           alert("초대 코드를 찾을 수 없습니다. 다시 확인해주세요.");
         } else if (response.status === 403) {
           alert("접근이 거부되었습니다. 유효한 초대 코드인지 확인하세요.");
+        } else if (response.status === 400) {
+          alert("요청 형식이 잘못되었습니다. 서버 문서를 확인하세요.");
         } else {
           alert("초대 코드 매칭 중 오류가 발생했습니다.");
         }
         throw new Error(`Failed to match invite code: ${response.status}`);
       }
 
-      const result = await response.json(); // 성공 시 서버 응답 데이터
+      const result = await response.json();
       alert("초대 코드가 매칭되었습니다!");
       console.log("Matched Team Info:", result);
-
-      // 매칭 성공 시, 이후 작업
-      navigate("/dashboard"); // 예: 팀 대시보드로 이동
     } catch (error) {
       console.error("Error matching invite code:", error.message);
     }
