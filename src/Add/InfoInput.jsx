@@ -1,39 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'; // useState 추가
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as T from './styledInfoInput';
+import axios from 'axios';
 
-export function InfoInput() {
+export default function InfoInput() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [nickname, setNickname] = useState('');
   const [profileImage, setProfileImage] = useState('');
-  const [workData, setWorkData] = useState(null); // 출근 시간 저장
-  const [childData, setChildData] = useState(null); // 자녀 정보 저장
-  const [petData, setPetData] = useState(null); // 반려동물 정보 저장
 
-  // 프로필 정보 로드
+  // 직장 추가 상태 관리
+  const [isWorkSaved, setIsWorkSaved] = useState(false); // 직장 정보 저장 여부
+  const [childData, setChildData] = useState(null); // 자녀 정보 상태
+  const [savedPets, setSavedPets] = useState([]); // 저장된 반려동물 정보
+
+  // localStorage에서 닉네임과 프로필 이미지 가져오기
   useEffect(() => {
     const storedNickname = localStorage.getItem('nickname');
     const storedProfileImage = localStorage.getItem('profileImage');
 
     if (!storedNickname || !storedProfileImage) {
+      console.error(
+        'Profile information is missing. Redirecting to login page...'
+      );
       alert('프로필 정보를 가져오지 못했습니다. 다시 로그인해주세요.');
-      navigate('/register');
+      navigate('/register'); // 로그인 페이지로 리다이렉트
     } else {
       setNickname(storedNickname);
       setProfileImage(storedProfileImage);
+      console.log('Profile loaded:', {
+        nickname: storedNickname,
+        image: storedProfileImage,
+      });
     }
   }, [navigate]);
 
-  // 기입된 정보 로드
+  // 직장 정보 상태 업데이트
   useEffect(() => {
-    const savedWorkData = localStorage.getItem('workData');
-    const savedChildData = localStorage.getItem('childData');
-    const savedPetData = localStorage.getItem('petData');
+    if (location.state?.workData) {
+      setIsWorkSaved(true); // 직장 정보가 저장되었음을 표시
+    }
+  }, [location.state]);
 
-    if (savedWorkData) setWorkData(JSON.parse(savedWorkData));
-    if (savedChildData) setChildData(JSON.parse(savedChildData));
-    if (savedPetData) setPetData(JSON.parse(savedPetData));
-  }, []);
+  // 자녀 정보 업데이트
+  useEffect(() => {
+    if (location.state?.childData) {
+      setChildData(location.state.childData[0]); // 첫 번째 자녀 정보로 설정
+    }
+  }, [location.state]);
+
+  // 반려동물 정보 업데이트
+  useEffect(() => {
+    if (location.state?.petData) {
+      setSavedPets((prev) => [...prev, location.state.petData]);
+    }
+  }, [location.state]);
 
   return (
     <T.PageContainer>
@@ -54,25 +76,32 @@ export function InfoInput() {
         </div>
       </T.ProfileSection>
 
-      {/* 중간 정보 카드 */}
-      <T.CardContainer>
-        {/* 출근 시간 */}
-        {workData ? (
-          <T.WorkCardSaved>
-            <T.Icon src="/images/IISchedule.svg" alt="출퇴근 아이콘" />
-            <T.SavedText>출퇴근 시간이 저장되었습니다!</T.SavedText>
-            <T.CheckIcon src="/images/Check.svg" alt="체크 아이콘" />
-          </T.WorkCardSaved>
-        ) : (
-          <T.WorkCard onClick={() => navigate('/workdetail')}>
-            <T.Icon src="/images/IISchedule.svg" alt="출퇴근 아이콘" />
-            <T.CardText>내 출퇴근 시간 추가하기</T.CardText>
-            <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
-          </T.WorkCard>
-        )}
+      {/* 출퇴근 시간 추가 섹션 */}
+      {isWorkSaved ? (
+        // 저장된 상태일 때 표시
+        <T.WorkCardSaved>
+          <T.Icon src="/images/IISchedule.svg" alt="출퇴근 시간 아이콘" />
+          <T.SavedText>출퇴근 시간이 저장되었습니다!</T.SavedText>
+          <T.CheckIcon src="/images/Check.svg" alt="체크 아이콘" />
+        </T.WorkCardSaved>
+      ) : (
+        // 저장되지 않은 상태일 때 표시
+        <T.WorkCard
+          onClick={() => {
+            setIsWorkSaved(true); // 상태 업데이트
+            navigate('/workdetail'); // 경로 이동
+          }}
+          $hoverable={true}
+        >
+          <T.Icon src="/images/IISchedule.svg" alt="출퇴근 시간 아이콘" />
+          <T.CardText>내 출퇴근 시간 추가하기</T.CardText>
+          <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
+        </T.WorkCard>
+      )}
 
+      <T.CardContainer>
+        {/* 자녀 추가 섹션 */}
         <T.FlexRow>
-          {/* 자녀 정보 */}
           <T.ChildCard
             onClick={() => navigate('/addchild')}
             hoverable
@@ -82,38 +111,47 @@ export function InfoInput() {
             }}
           >
             <T.Icon src="/images/ChildIcon.svg" alt="자녀 아이콘" />
-            <T.CardText>{childData ? childData.nickname : '자녀'}</T.CardText>
-            <T.PlusIcon
-              src={childData ? '/images/Addcheck.svg' : '/images/IIPlus.svg'}
-              alt="자녀 추가"
-            />
+            <T.CardText>자녀</T.CardText>
+            <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
           </T.ChildCard>
 
-          {/* 반려동물 정보 */}
-          <T.ChildCard
-            onClick={() => navigate('/addpet')}
-            hoverable
-            style={{
-              color: petData ? 'purple' : 'gray',
-              borderColor: petData ? 'purple' : 'gray',
-            }}
-          >
+          {/* 반려동물 추가 섹션 */}
+          <T.ChildCard onClick={() => navigate('/addpet')} hoverable>
             <T.Icon src="/images/PetIcon.svg" alt="반려동물 아이콘" />
-            <T.CardText>{petData ? petData.nickname : '반려동물'}</T.CardText>
-            <T.PlusIcon
-              src={petData ? '/images/Addcheck.svg' : '/images/IIPlus.svg'}
-              alt="반려동물 추가"
-            />
+            <T.CardText>반려동물</T.CardText>
+            <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
           </T.ChildCard>
         </T.FlexRow>
       </T.CardContainer>
 
+      {/* 추가 */}
+      <T.CardContainer>
+        {/* 자녀 추가 섹션 */}
+        <T.FlexRow>
+          <div>
+            <T.AdditionalText>자녀 추가하기</T.AdditionalText>
+            <T.ChildCard onClick={() => navigate('/addchildren')} hoverable>
+              <T.Icon src="/images/ChildIcon.svg" alt="자녀 아이콘" />
+              <T.CardText>자녀</T.CardText>
+              <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
+            </T.ChildCard>
+          </div>
+
+          {/* 반려동물 추가 섹션 */}
+          <div>
+            <T.AdditionalText>반려동물 추가하기</T.AdditionalText>
+            <T.ChildCard onClick={() => navigate('/addpet')} hoverable>
+              <T.Icon src="/images/PetIcon.svg" alt="반려동물 아이콘" />
+              <T.CardText>반려동물</T.CardText>
+              <T.PlusIcon src="/images/IIPlus.svg" alt="플러스 아이콘" />
+            </T.ChildCard>
+          </div>
+        </T.FlexRow>
+      </T.CardContainer>
       {/* 하단 버튼 */}
-      <T.BottomButton onClick={() => alert('완료')}>
+      <T.BottomButton onClick={() => navigate('/nomember')}>
         똑똑해진 집콕콕과 함께 시작해볼까요?
       </T.BottomButton>
     </T.PageContainer>
   );
 }
-
-export default InfoInput;
